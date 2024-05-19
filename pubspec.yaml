@@ -1,0 +1,78 @@
+name: firmer_city
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.8
+  go_router: ^14.1.2
+  riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1
+  flutter_native_splash: ^2.4.0
+  flutter_smart_dialog: ^4.9.6+2
+  responsive_framework: ^1.4.0
+  firebase_core: ^2.31.0
+  firebase_auth: ^4.19.5
+  cloud_firestore: ^4.17.3
+  url_strategy: ^0.2.0
+  path_provider: ^2.1.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  faker: ^2.1.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/fonts/
+
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
+        - asset: assets/fonts/OpenSans-Bold.ttf
+        - asset: assets/fonts/OpenSans-Light.ttf
+        - asset: assets/fonts/OpenSans-Medium.ttf
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway-Bold.ttf
+        - asset: assets/fonts/Raleway-Light.ttf
+        - asset: assets/fonts/Raleway-Medium.ttf
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/farmer_splash.png
+  android_12:
+    image: assets/images/farmer_splash.png
+  web: false
+
+  # dart run flutter_native_splash:create
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/farmer_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#ffffff"
+
+  # flutter pub run flutter_launcher_icons

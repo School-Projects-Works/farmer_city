@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "592956308849",
+    "project_id": "farmer-citi",
+    "storage_bucket": "farmer-citi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592956308849:android:22f7b077c94c246a7b8ad0",
+        "android_client_info": {
+          "package_name": "com.example.firmer_city"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOXuvcnZumNlB9M3afuWMHKGb7gEtUw9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
