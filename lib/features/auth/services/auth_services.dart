@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:gps_student_attendance/features/auth/data/user_model.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../data/user_model.dart';
 
 class AuthServices {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseStorage storage = FirebaseStorage.instance;
 
-  static Future<(bool, String)> createUser(Users user) async {
+  static Future<(bool, String)> createUser(UserModel user) async {
     // create user
     try {
       //create firebase user
@@ -68,27 +69,27 @@ class AuthServices {
     }
   }
 
-  static Future<(String, Users)> getUserData(String uid) async {
+  static Future<(String, UserModel)> getUserData(String uid) async {
     try {
       var user = await firestore.collection('users').doc(uid).get();
       if (user.exists) {
-        return ('User found', Users.fromMap(user.data()!));
+        return ('User found', UserModel.fromMap(user.data()!));
       } else {
-        return ('User not found', Users());
+        return ('User not found', UserModel());
       }
     } catch (e) {
-      return (e.toString(), Users());
+      return (e.toString(), UserModel());
     }
   }
 
-  static Future<Users> checkIfLoggedIn() async {
+  static Future<UserModel> checkIfLoggedIn() async {
     var box = Hive.box('user');
     var user = box.get('id');
     if (user != null) {
       var (_, userData) = await getUserData(user);
       return userData;
     } else {
-      return Users();
+      return UserModel();
     }
   }
 
@@ -101,17 +102,17 @@ class AuthServices {
     }
   }
 
-  static Future<void> saveUserData(Users user) async {
+  static Future<void> saveUserData(UserModel user) async {
     CollectionReference users = firestore.collection('users');
     await users.doc(user.id).set(user.toMap());
   }
 
-  static Future<List<Users>> getUsers() async {
+  static Future<List<UserModel>> getUserModel() async {
     var users = await firestore.collection('users').get();
-    return users.docs.map((e) => Users.fromMap(e.data())).toList();
+    return users.docs.map((e) => UserModel.fromMap(e.data())).toList();
   }
 
-  static Future<void> updateUserData(Users user) async {
+  static Future<void> updateUserData(UserModel user) async {
     CollectionReference users = firestore.collection('users');
     await users.doc(user.id).update(user.toMap());
   }

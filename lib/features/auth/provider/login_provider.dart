@@ -1,20 +1,21 @@
+import 'package:firmer_city/features/auth/data/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gps_student_attendance/config/router/router_info.dart';
-import 'package:gps_student_attendance/core/functions/navigation.dart';
-import 'package:gps_student_attendance/core/widget/custom_dialog.dart';
-import 'package:gps_student_attendance/features/auth/data/user_model.dart';
-import 'package:gps_student_attendance/features/auth/services/auth_services.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../config/router/router_info.dart';
+import '../../../core/functions/navigation.dart';
+import '../../../core/widget/custom_dialog.dart';
+import '../services/auth_services.dart';
 
 final loginObsecureTextProvider = StateProvider<bool>((ref) => true);
 
 final loginProvider =
-    StateNotifierProvider<LoginProvider, Users>((ref) => LoginProvider());
+    StateNotifierProvider<LoginProvider, UserModel>((ref) => LoginProvider());
 
-class LoginProvider extends StateNotifier<Users> {
-  LoginProvider() : super(Users());
+class LoginProvider extends StateNotifier<UserModel> {
+  LoginProvider() : super(UserModel());
 
   void setEmail(String value) {
     state = state.copyWith(email: () => value);
@@ -64,7 +65,7 @@ class LoginProvider extends StateNotifier<Users> {
     }
   }
 
-  void setUser(Users userData) {
+  void setUser(UserModel userData) {
     state = userData;
   }
 
@@ -83,65 +84,26 @@ class LoginProvider extends StateNotifier<Users> {
   }
 }
 
-// final loginProviderStream = StreamProvider.autoDispose<Users>((ref) async* {
-//   //! save dummy ClassList to fire base
-//   //List<ClassModel> dummyClass = await ClassServices.getClasses();
-//   // List<ClassModel> dummyClassList = ClassModel.dummyClassList();
-//   //List<Users> dummyUser = Users.dummyList();
-//   //List<Users> savesUsersList = await AuthServices.getUsers();
-//   // //save dummy users to firestore
-//   // final faker = Faker();
-//   // for (var user in savesUsersList) {
-//   //   user.indexNumber = faker.randomGenerator.numbers(9, 10).toList().join();
-//   //   await AuthServices.updateUserData(user);
-//   // }
-//   // //save dummy class to firestore
-//   // for (var classModel in dummyClassList) {
-//   //   var lect =
-//   //       savesUsersList
-//   //       .where((element) => element.userType == 'Lecturer').toList();
-//   //   var students =
-//   //       savesUsersList
-//   //       .where((element) => element.userType == 'Student').toList();
-//   //   lect.shuffle();
-//   //   students.shuffle();
-//   //   classModel.lecturerId = lect.first.id!;
-//   //   classModel.lecturerName = lect.first.name!;
-//   //   classModel.lecturerImage = lect.first.profileImage;
-//   //   classModel.students = students.map((e) => e.toMap()).toList().sublist(0, 60);
-//   //   classModel.studentIds = students.map((e) => e.id!).toList().sublist(0, 60);
-//   //   await ClassServices.createClass(classModel);
-//   // }
-//   //!==================================================
-//   var user = await AuthServices.checkIfLoggedIn();
-//   if (user.id != null) {
-//     ref.read(userProvider.notifier).setUser(user);
-//   }
-//   yield user;
-// });
-
-final userProvider = StateNotifierProvider<UserProvider, Users>((ref) {
+final userProvider = StateNotifierProvider<UserProvider, UserModel>((ref) {
   return UserProvider();
 });
 
-class UserProvider extends StateNotifier<Users> {
-  UserProvider() : super(Users());
+class UserProvider extends StateNotifier<UserModel> {
+  UserProvider() : super(UserModel());
 
-  void setUser(Users user) {
+  void setUser(UserModel user) {
     state = user;
   }
 
   void removeUser() {
-    state = Users();
+    state = UserModel();
   }
 
   void setName(String value) {
     state = state.copyWith(name: () => value);
   }
 
-  void setPrefix(String string) {
-    state = state.copyWith(prefix: () => string);
-  }
+
 
   void setGender(String s) {
     state = state.copyWith(
@@ -153,13 +115,6 @@ class UserProvider extends StateNotifier<Users> {
     state = state.copyWith(phone: () => value);
   }
 
-  void setDepartment(String value) {
-    state = state.copyWith(department: () => value);
-  }
-
-  void setLevel(String string) {
-    state = state.copyWith(level: () => string);
-  }
 
   void updateUser(
       {required WidgetRef ref, required BuildContext context}) async {

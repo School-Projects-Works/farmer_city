@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gps_student_attendance/core/widget/custom_button.dart';
-import 'package:gps_student_attendance/core/widget/custom_drop_down.dart';
-import 'package:gps_student_attendance/core/widget/custom_input.dart';
-import 'package:gps_student_attendance/features/auth/provider/new_user_provider.dart';
-import 'package:gps_student_attendance/utils/styles.dart';
+
+import '../../../../../core/widget/custom_button.dart';
+import '../../../../../core/widget/custom_input.dart';
+import '../../../../../utils/styles.dart';
+import '../../../provider/new_user_provider.dart';
+
 
 class BioDataPage extends ConsumerWidget {
   const BioDataPage({super.key});
@@ -39,68 +40,19 @@ class BioDataPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text('Choose your prefix ?',
-                          style: styles.textStyle(
-                              mobile: 18, desktop: 25, tablet: 20)),
-                      subtitle: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: CustomDropDown(
-                            items: [
-                              'Mr.',
-                              'Mrs.',
-                              'Miss',
-                              'Dr.',
-                              'Prof.',
-                            ]
-                                .map((e) =>
-                                    DropdownMenuItem(value: e, child: Text(e)))
-                                .toList(),
-                            hintText: 'Select Prefix',
-                            onChanged: (value) {
-                              notifier.setPrefix(value.toString());
-                            },
-                          ))),
-                  ListTile(
+                   ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text('What is your full name ?',
                           style: styles.textStyle(
                               mobile: 18, desktop: 25, tablet: 20)),
                       subtitle: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 100,
-                                child: CustomDropDown(
-                                  items: [
-                                    'Mr.',
-                                    'Mrs.',
-                                    'Miss',
-                                    'Dr.',
-                                    'Prof.',
-                                  ]
-                                      .map((e) => DropdownMenuItem(
-                                          value: e, child: Text(e)))
-                                      .toList(),
-                                  hintText: 'Select Prefix',
-                                  onChanged: (value) {
-                                    notifier.setPrefix(value.toString());
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Expanded(
-                                child: CustomTextFields(
-                                  color: Colors.pink[700]!,
-                                  hintText: 'Enter Full Name',
-                                  onChanged: (value) {
-                                    notifier.setFullName(value);
-                                  },
-                                ),
-                              ),
-                            ],
+                          child: CustomTextFields(
+                            color: Colors.pink[700]!,
+                            hintText: 'Enter Full Name',
+                            onChanged: (value) {
+                              notifier.setFullName(value);
+                            },
                           ))),
                   //email
                   ListTile(

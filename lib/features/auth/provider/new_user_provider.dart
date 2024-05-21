@@ -1,17 +1,18 @@
+import 'package:firmer_city/features/auth/provider/register_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gps_student_attendance/config/router/router_info.dart';
-import 'package:gps_student_attendance/core/widget/custom_dialog.dart';
-import 'package:gps_student_attendance/features/auth/data/user_model.dart';
-import 'package:gps_student_attendance/features/auth/provider/register_screen_provider.dart';
-import 'package:gps_student_attendance/features/auth/services/auth_services.dart';
+import '../../../config/router/router_info.dart';
+import '../../../core/widget/custom_dialog.dart';
+import '../data/user_model.dart';
+import '../services/auth_services.dart';
+
 
 final newUserProvider =
-    StateNotifierProvider<NewUserProvider, Users>((ref) => NewUserProvider());
+    StateNotifierProvider<NewUserProvider, UserModel>((ref) => NewUserProvider());
 
-class NewUserProvider extends StateNotifier<Users> {
-  NewUserProvider() : super(Users());
+class NewUserProvider extends StateNotifier<UserModel> {
+  NewUserProvider() : super(UserModel());
 
   void setGender(String s) {
     state = state.copyWith(gender: () => s);
@@ -21,28 +22,8 @@ class NewUserProvider extends StateNotifier<Users> {
     state = state.copyWith(userType: () => s);
   }
 
-  void setIndexNumber(String value) {
-    state = state.copyWith(indexNumber: () => value);
-  }
-
-  void setLevel(String s) {
-    state = state.copyWith(level: () => s);
-  }
-
-  void setDepartment(String string) {
-    state = state.copyWith(department: () => string);
-  }
-
-  void setProgram(String value) {
-    state = state.copyWith(program: () => value);
-  }
-
   void setFullName(String value) {
     state = state.copyWith(name: () => value);
-  }
-
-  void setPrefix(String string) {
-    state = state.copyWith(prefix: () => string);
   }
 
   void setEmail(String value) {
@@ -62,21 +43,9 @@ class NewUserProvider extends StateNotifier<Users> {
       CustomDialog.showToast(
         message: 'Please select user type',
       );
-    } else if (state.userType == 'Student' && state.indexNumber == null) {
+    } else if (state.userType == 'Student' && state.farmType.isEmpty) {
       CustomDialog.showToast(
-        message: 'Please enter index number',
-      );
-    } else if (state.department == null) {
-      CustomDialog.showToast(
-        message: 'Please select department',
-      );
-    } else if (state.userType == 'Student' && state.program == null) {
-      CustomDialog.showToast(
-        message: 'Please select program',
-      );
-    } else if (state.userType == 'Student' && state.level == null) {
-      CustomDialog.showToast(
-        message: 'Please select level',
+        message: 'Please select farm type',
       );
     } else {
       ref.read(currentScreenProvider.notifier).state = 1;
@@ -84,10 +53,7 @@ class NewUserProvider extends StateNotifier<Users> {
   }
 
   bool validateBio() {
-    if (state.prefix == null) {
-      CustomDialog.showToast(message: 'Please select prefix');
-      return false;
-    } else if (state.name == null) {
+    if (state.name == null) {
       CustomDialog.showToast(message: 'Please enter full name');
       return false;
     } else if (state.phone == null || state.phone!.length < 10) {
@@ -115,7 +81,7 @@ class NewUserProvider extends StateNotifier<Users> {
       if (succes) {
         CustomDialog.dismiss();
         CustomDialog.showSuccess(message: message);
-        state = Users();
+        state = UserModel();
         context.go(RouterInfo.loginRoute.path);
       } else {
         CustomDialog.dismiss();

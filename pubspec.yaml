@@ -29,6 +29,11 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   faker: ^2.1.0
+  intl: ^0.19.0
+  image_picker: ^1.1.1
+  image_picker_for_web: ^3.0.4
+  firebase_storage: ^11.7.5
+  carousel_slider: ^4.2.1
 
 
 dev_dependencies:
@@ -44,6 +49,7 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - assets/slide/
 
   fonts:
     - family: OpenSans

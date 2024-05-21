@@ -13,5 +13,8 @@ class Assets {
   static const String imagesFarmerIcon = 'assets/images/farmer_icon.png';
   static const String imagesFarmerLogo = 'assets/images/farmer_logo.png';
   static const String imagesFarmerSplash = 'assets/images/farmer_splash.png';
+  static const String slideSlide2 = 'assets/slide/slide_2.jpg';
+  static const String slideSlide3 = 'assets/slide/slide_3.jpg';
+  static const String slideSlidw1 = 'assets/slide/slidw_1.avif';
 
 }

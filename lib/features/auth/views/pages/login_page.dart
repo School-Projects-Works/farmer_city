@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gps_student_attendance/config/router/router_info.dart';
-import 'package:gps_student_attendance/core/functions/navigation.dart';
-import 'package:gps_student_attendance/core/widget/custom_button.dart';
-import 'package:gps_student_attendance/core/widget/custom_input.dart';
-import 'package:gps_student_attendance/features/auth/provider/login_provider.dart';
-import 'package:gps_student_attendance/generated/assets.dart';
-import 'package:gps_student_attendance/utils/styles.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+
+import '../../../../config/router/router_info.dart';
+import '../../../../core/functions/navigation.dart';
+import '../../../../core/widget/custom_button.dart';
+import '../../../../core/widget/custom_input.dart';
+import '../../../../generated/assets.dart';
+import '../../../../utils/styles.dart';
+import '../../provider/login_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -80,7 +81,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Image.asset(Assets.imagesLogo,
+                                          Image.asset(Assets.imagesFarmerLogo,
                                               width: 200, height: 200),
                                         ],
                                       ),
@@ -105,7 +106,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           hiddenConditions: const [
                                             Condition.largerThan(name: TABLET)
                                           ],
-                                          child: Image.asset(Assets.imagesIcon,
+                                          child: Image.asset(Assets.imagesFarmerIcon,
                                               width: 80, height: 80)),
                                       Text(
                                         'Login ',
