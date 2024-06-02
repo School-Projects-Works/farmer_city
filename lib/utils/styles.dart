@@ -19,6 +19,9 @@ class CustomStyles {
       Color? color,
       FontWeight? fontWeight,
       String fontFamily = 'OpenSans',
+      double? height,
+      double? wordSpacing,
+      double? letterSpacing,
       TextDecoration? decoration}) {
     return TextStyle(
         fontSize: ResponsiveValue<double>(context,
@@ -31,6 +34,9 @@ class CustomStyles {
             ]).value,
         color: color,
         fontWeight: fontWeight,
+        height: height,
+        wordSpacing: wordSpacing,
+        letterSpacing: letterSpacing,
         fontFamily: fontFamily,
         decoration: decoration);
   }

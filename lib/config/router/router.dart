@@ -1,4 +1,5 @@
 import 'package:firmer_city/config/router/router_info.dart';
+import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/features/main/views/home_page.dart';
 import 'package:firmer_city/features/main/views/main_page.dart';
 import 'package:firmer_city/features/profile/views/profile_page.dart';
@@ -10,12 +11,13 @@ import '../../features/auth/provider/login_provider.dart';
 import '../../features/auth/services/auth_services.dart';
 import '../../features/auth/views/pages/login_page.dart';
 import '../../features/auth/views/pages/registration_page.dart';
+import '../../features/community/views/community_page.dart';
+import '../../features/community/views/post_details_page.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
-final _authShellNavigatorKey = GlobalKey<NavigatorState>();
 final _homeShellNavigatorKey = GlobalKey<NavigatorState>();
 
-GoRouter router(WidgetRef ref) => GoRouter(
+GoRouter routerConfig(WidgetRef ref) => GoRouter(
         navigatorKey: rootNavigatorKey,
         initialLocation: RouterInfo.homeRoute.path,
         redirect: (context, state) async {
@@ -36,12 +38,21 @@ GoRouter router(WidgetRef ref) => GoRouter(
               box.contains(RouterInfo.registerRoute.name)) {
             return null;
           } else if (route.contains('home')) {
-            Hive.box('route').put('currentRoute', RouterInfo.homeRoute.name);
+            ref.read(navProvider.notifier).state = RouterInfo.homeRoute.name;
             return null;
           } else if (route.contains('profile') &&
               box.contains(RouterInfo.profileRoute.name)) {
             return null;
-          } else {
+          } else if (route.contains('community') &&
+              box.contains(RouterInfo.communityRoute.name)) {
+            return null;
+          } 
+          else if (route.contains('post-detail') &&
+              box.contains(RouterInfo.postDetailRoute.name)) {
+            return null;
+          }
+          else {
+            ref.read(navProvider.notifier).state = RouterInfo.homeRoute.name;
             return RouterInfo.homeRoute.path;
           }
         },
@@ -71,5 +82,18 @@ GoRouter router(WidgetRef ref) => GoRouter(
                     path: RouterInfo.profileRoute.path,
                     name: RouterInfo.profileRoute.name,
                     builder: (context, state) => const ProfilePage()),
+                GoRoute(
+                    path: RouterInfo.communityRoute.path,
+                    name: RouterInfo.communityRoute.name,
+                    builder: (context, state) => const CommunityPage()),
+                GoRoute(
+                    path: RouterInfo.postDetailRoute.path,
+                    name: RouterInfo.postDetailRoute.name,
+                    builder: (context, state) {
+                      final postId = state.pathParameters['id'];
+                      return PostDetailPage(
+                        postId: postId??'',
+                      );
+                    }),
               ]),
         ]);

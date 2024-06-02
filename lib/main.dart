@@ -5,7 +5,6 @@ import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -50,15 +49,15 @@ class MyApp extends ConsumerWidget {
         var widget = ResponsiveBreakpoints.builder(
           child: child!,
           breakpoints: [
-            const Breakpoint(start: 0, end: 600, name: MOBILE),
-            const Breakpoint(start: 601, end: 900, name: TABLET),
-            const Breakpoint(start: 901, end: 1920, name: DESKTOP),
+            const Breakpoint(start: 0, end: 700, name: MOBILE),
+            const Breakpoint(start: 701, end: 1280, name: TABLET),
+            const Breakpoint(start: 1281, end: 1920, name: DESKTOP),
             const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
           ],
         );
         return widget;
       }),
-      routerConfig: router(ref),
+      routerConfig: routerConfig(ref),
     );
   }
 }

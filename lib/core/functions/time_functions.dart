@@ -14,7 +14,7 @@ class TimeUtils {
   static String formatDateTime(int time, {bool onlyDate = false}) {
     var date = DateTime.fromMillisecondsSinceEpoch(time);
     var formatter = onlyDate
-        ? DateFormat('EEEE, MMM dd yyyy')
+        ? DateFormat('EEE, MMM dd yyyy')
         : DateFormat('EEE, MMM dd yyyy HH:mm:ss a');
     return formatter.format(date);
   }

@@ -1,5 +1,15 @@
+import 'package:firmer_city/core/widget/custom_button.dart';
+import 'package:firmer_city/core/widget/custom_input.dart';
+import 'package:firmer_city/core/widget/footer_page.dart';
+import 'package:firmer_city/features/community/provider/community_provider.dart';
+import 'package:firmer_city/features/community/provider/switch_provider.dart';
+import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+
+import '../provider/post_provider.dart';
+import 'components/post_item.dart';
 
 class CommunityPage extends ConsumerStatefulWidget {
   const CommunityPage({super.key});
@@ -9,9 +19,163 @@ class CommunityPage extends ConsumerStatefulWidget {
 }
 
 class _CommunityPageState extends ConsumerState<CommunityPage> {
-
   @override
   Widget build(BuildContext context) {
-    return Container();
+    var post = ref.watch(postStream);
+    var breakPoint = ResponsiveBreakpoints.of(context);
+    var styles = CustomStyles(context: context);
+    return SizedBox(
+      width: breakPoint.screenWidth,
+      height: breakPoint.screenHeight,
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 70,
+                left: 5,
+                right: 5,
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          if (breakPoint.smallerThan(DESKTOP) &&
+                              ref.watch(isSearching))
+                            const SizedBox.shrink()
+                          else
+                            Text(
+                              'Recent Posts',
+                              style: styles.textStyle(
+                                  fontWeight: FontWeight.bold,
+                                  mobile: 30,
+                                  desktop: 36,
+                                  tablet: 34,
+                                  color: primaryColor),
+                            ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                if (breakPoint.largerOrEqualTo(DESKTOP))
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: breakPoint.screenWidth * .3,
+                                        child: CustomTextFields(
+                                          hintText: 'Search post',
+                                          onChanged: (value) {
+                                            ref.read(filterProvider.notifier).state = value;
+                                          },
+                                          suffixIcon: const Icon(Icons.search),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 15),
+                                      CustomButton(
+                                          text: 'Ask Community',
+                                          color: secondaryColor,
+                                          icon: const Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            //todo ask community
+                                          }),
+                                    ],
+                                  ),
+                                if (breakPoint.smallerThan(DESKTOP))
+                                  if (ref.watch(isSearching))
+                                    SizedBox(
+                                      width: breakPoint.isMobile
+                                          ? double.infinity
+                                          : breakPoint.screenWidth * .6,
+                                      child: CustomTextFields(
+                                        hintText: 'Search post',
+                                        onChanged: (value) {
+                                          ref.read(filterProvider.notifier).state = value;
+                                        },
+                                        suffixIcon: IconButton(
+                                          onPressed: () {
+                                            ref
+                                                .read(filterProvider.notifier)
+                                                .state = '';
+                                            ref
+                                                .read(isSearching.notifier)
+                                                .state = false;
+                                          },
+                                          icon: const Icon(Icons.close),
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    Row(
+                                      children: [
+                                        CustomButton(
+                                          text: '',
+                                          radius: 10,
+                                          onPressed: () {
+                                            ref
+                                                .read(isSearching.notifier)
+                                                .state = true;
+                                          },
+                                          icon: const Icon(
+                                            Icons.search,
+                                            color: Colors.white,
+                                          ),
+                                          color: primaryColor,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        CustomButton(
+                                          text: '',
+                                          radius: 10,
+                                          onPressed: () {
+                                            //todo ask community
+                                          },
+                                          icon: const Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                          ),
+                                          color: secondaryColor,
+                                        ),
+                                      ],
+                                    ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 22),
+                      post.when(data: (data) {
+                         var filterdPost = ref.watch(filteredPostProvider);
+                        if (filterdPost.isEmpty) {
+                          return const Center(
+                            child: Text('No post available'),
+                          );
+                        }
+                        return Wrap(
+                          children: filterdPost.map((e) => PostItem(e)).toList(),
+                        );
+                      }, error: (error, stack) {
+                        return const Center(
+                          child: Text('Unable to get post '),
+                        );
+                      }, loading: () {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const FooterPage()
+        ],
+      ),
+    );
   }
 }

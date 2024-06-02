@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 class PostModel {
   String? id;
@@ -11,36 +13,36 @@ class PostModel {
   String? authorName;
   String? authorImage;
   String? authorUserType;
-  int? likes;
+  List<String> likes;
   int? createdAt;
   PostModel({
     this.id,
-    this.images= const [],
+    this.images = const [],
     this.title,
     this.description,
     this.authorId,
     this.authorName,
     this.authorImage,
     this.authorUserType,
-    this.likes,
+    this.likes = const [],
     this.createdAt,
   });
 
   PostModel copyWith({
     ValueGetter<String?>? id,
-    ValueGetter<List<String>?>? images,
+    List<String>? images,
     ValueGetter<String?>? title,
     ValueGetter<String?>? description,
     ValueGetter<String?>? authorId,
     ValueGetter<String?>? authorName,
     ValueGetter<String?>? authorImage,
     ValueGetter<String?>? authorUserType,
-    ValueGetter<int?>? likes,
+    ValueGetter<List<String>?>? likes,
     ValueGetter<int?>? createdAt,
   }) {
     return PostModel(
       id: id != null ? id() : this.id,
-      images:  this.images,
+      images: images ?? this.images,
       title: title != null ? title() : this.title,
       description: description != null ? description() : this.description,
       authorId: authorId != null ? authorId() : this.authorId,
@@ -48,7 +50,7 @@ class PostModel {
       authorImage: authorImage != null ? authorImage() : this.authorImage,
       authorUserType:
           authorUserType != null ? authorUserType() : this.authorUserType,
-      likes: likes != null ? likes() : this.likes,
+      likes:  this.likes,
       createdAt: createdAt != null ? createdAt() : this.createdAt,
     );
   }
@@ -78,7 +80,7 @@ class PostModel {
       authorName: map['authorName'],
       authorImage: map['authorImage'],
       authorUserType: map['authorUserType'],
-      likes: map['likes']?.toInt(),
+      likes: List<String>.from(map['likes']),
       createdAt: map['createdAt']?.toInt(),
     );
   }
@@ -106,7 +108,7 @@ class PostModel {
         other.authorName == authorName &&
         other.authorImage == authorImage &&
         other.authorUserType == authorUserType &&
-        other.likes == likes &&
+        listEquals(other.likes, likes) &&
         other.createdAt == createdAt;
   }
 
@@ -126,23 +128,33 @@ class PostModel {
 
   static List<PostModel> dummy() {
     final _faker = Faker();
-    return List.generate(
-      10,
-      (index) => PostModel(
+
+    return List.generate(15, (index) {
+    
+      //generate random id of string from uuid
+      var count = _faker.randomGenerator.integer(100, min: 1);
+      var likes = List.generate(count, (index) => _faker.guid.guid());
+
+      return PostModel(
         id: _faker.guid.guid(),
-        images: List.generate(3, (index) => _faker.image.image(
-          random: true,
-          keywords: ['Farm', 'Agriculture', 'Nature', 'Farming', 'Crops']
-        )),
-        title: _faker.lorem.sentence(),
-        description: _faker.lorem.sentences(5).join(' '),
+        images: List.generate(
+            5,
+            (index) => _faker.image.image(height: 800, random: true, keywords: [
+                  'Farm',
+                  'Agriculture',
+                  'Nature',
+                  'Farming',
+                  'Crops'
+                ])),
+        title: _faker.lorem.sentences(2).join(' '),
+        description: _faker.lorem.sentences(100).join(' '),
         authorId: _faker.guid.guid(),
         authorName: _faker.person.name(),
         authorImage: _faker.image.image(),
         authorUserType: _faker.lorem.word(),
-        likes: _faker.randomGenerator.integer(100),
+        likes: likes,
         createdAt: _faker.date.dateTime().millisecondsSinceEpoch,
-      ),
-    );
+      );
+    });
   }
 }
