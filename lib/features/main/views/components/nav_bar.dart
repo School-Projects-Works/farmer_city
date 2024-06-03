@@ -1,6 +1,5 @@
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/functions/navigation.dart';
-import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
@@ -122,7 +121,12 @@ class _NavBarState extends ConsumerState<NavBar> {
                     ],
                     child: CircleAvatar(
                         radius: 20,
-                        backgroundImage: NetworkImage(user.profileImage!)),
+                        backgroundImage: user.profileImage != null
+                            ? NetworkImage(user.profileImage!)
+                            : null,
+                        child: user.profileImage == null
+                            ? const Icon(Icons.person)
+                            : null),
                   ),
               ],
             ),

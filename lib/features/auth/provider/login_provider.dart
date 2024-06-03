@@ -79,6 +79,7 @@ class LoginProvider extends StateNotifier<UserModel> {
       ref.read(userProvider.notifier).removeUser();
       CustomDialog.dismiss();
       CustomDialog.showSuccess(message: 'Logged out successfully');
+       // ignore: use_build_context_synchronously
        navigateToRoute(context: context, route: RouterInfo.loginRoute); 
     }
   }

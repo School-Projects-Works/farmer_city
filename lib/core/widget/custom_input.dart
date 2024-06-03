@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../utils/styles.dart';
 
-
 class CustomTextFields extends ConsumerWidget {
   const CustomTextFields({
     super.key,
@@ -77,8 +76,8 @@ class CustomTextFields extends ConsumerWidget {
           ? TextCapitalization.characters
           : TextCapitalization.none,
       style: styles.textStyle(
-          fontWeight: FontWeight.bold,
-          mobile: 16,
+          fontWeight: FontWeight.w500,
+          mobile: 14,
           color: isReadOnly!
               ? Colors.grey
               : Theme.of(context).textTheme.labelLarge!.color),
@@ -123,7 +122,8 @@ class CustomTextFields extends ConsumerWidget {
           fontWeight: FontWeight.w500,
         ),
         iconColor: Theme.of(context).colorScheme.secondary,
-        hintStyle: styles.textStyle(),
+        hintStyle: styles.textStyle(
+            fontWeight: FontWeight.w300, mobile: 13, desktop: 13, tablet: 13),
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,

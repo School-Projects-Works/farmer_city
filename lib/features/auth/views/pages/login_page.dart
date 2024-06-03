@@ -75,14 +75,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      height: 400,
+                                      height: 470,
                                       color: primaryColor,
                                       alignment: Alignment.center,
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Image.asset(Assets.imagesFarmerLogo,
-                                              width: 200, height: 200),
+                                          Image.asset(
+                                            Assets.imagesFormerLight,
+                                            width: 300,
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -106,8 +108,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           hiddenConditions: const [
                                             Condition.largerThan(name: TABLET)
                                           ],
-                                          child: Image.asset(Assets.imagesFarmerIcon,
-                                              width: 80, height: 80)),
+                                          child: Image.asset(
+                                              Assets.imagesFarmerIcon,
+                                              width: 80,
+                                              height: 80)),
                                       Text(
                                         'Login ',
                                         style: styles.textStyle(

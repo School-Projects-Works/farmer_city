@@ -1,5 +1,5 @@
 
-import 'package:firmer_city/features/comments/data/comment_model.dart';
+
 import 'package:firmer_city/features/comments/services/comment_services.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
 import 'package:firmer_city/features/community/provider/post_provider.dart';

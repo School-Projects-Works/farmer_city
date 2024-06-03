@@ -24,9 +24,10 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
     var post = ref.watch(postStream);
     var breakPoint = ResponsiveBreakpoints.of(context);
     var styles = CustomStyles(context: context);
-    return SizedBox(
+    return Container(
       width: breakPoint.screenWidth,
       height: breakPoint.screenHeight,
+      padding: const EdgeInsets.only(top: 30),
       child: Column(
         children: [
           Expanded(
@@ -68,7 +69,9 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                         child: CustomTextFields(
                                           hintText: 'Search post',
                                           onChanged: (value) {
-                                            ref.read(filterProvider.notifier).state = value;
+                                            ref
+                                                .read(filterProvider.notifier)
+                                                .state = value;
                                           },
                                           suffixIcon: const Icon(Icons.search),
                                         ),
@@ -95,7 +98,9 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                       child: CustomTextFields(
                                         hintText: 'Search post',
                                         onChanged: (value) {
-                                          ref.read(filterProvider.notifier).state = value;
+                                          ref
+                                              .read(filterProvider.notifier)
+                                              .state = value;
                                         },
                                         suffixIcon: IconButton(
                                           onPressed: () {
@@ -149,14 +154,15 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                       ),
                       const SizedBox(height: 22),
                       post.when(data: (data) {
-                         var filterdPost = ref.watch(filteredPostProvider);
+                        var filterdPost = ref.watch(filteredPostProvider);
                         if (filterdPost.isEmpty) {
                           return const Center(
                             child: Text('No post available'),
                           );
                         }
                         return Wrap(
-                          children: filterdPost.map((e) => PostItem(e)).toList(),
+                          children:
+                              filterdPost.map((e) => PostItem(e)).toList(),
                         );
                       }, error: (error, stack) {
                         return const Center(

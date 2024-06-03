@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firmer_city/features/comments/model/comment_data.dart';
 
-import '../data/comment_model.dart';
 
 
 
 class CommentServices{
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static Future<void> addComment(CommentModel comment) async {
+  static Future<void> addComment(CommentDataModel comment) async {
     try {
       await _firestore.collection('comments').doc(comment.id).set(comment.toMap());
     } catch (e) {
-      throw Exception(e);
+      print(e);
     }
   }
 
@@ -23,18 +23,22 @@ class CommentServices{
     }
   }
 
-  static Future<void> updateComment(CommentModel comment) async {
+  static Future<void> updateComment(CommentDataModel comment) async {
     try {
       await _firestore.collection('comments').doc(comment.id).update(comment.toMap());
     } catch (e) {
-      throw Exception(e);
+     print(e);
     }
   }
 
-  static Stream<List<CommentModel>> getComments(String postId) {
+  static Stream<List<CommentDataModel>> getComments(String postId) {
     return _firestore.collection('comments').where('postId', isEqualTo: postId).snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => CommentModel.fromMap(doc.data())).toList();
+      return snapshot.docs.map((doc) => CommentDataModel.fromMap(doc.data())).toList();
     });
+  }
+
+  static String getCommentId() {
+    return _firestore.collection('comments').doc().id;
   }
 
 

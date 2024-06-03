@@ -7,9 +7,8 @@ import '../../../core/widget/custom_dialog.dart';
 import '../data/user_model.dart';
 import '../services/auth_services.dart';
 
-
-final newUserProvider =
-    StateNotifierProvider<NewUserProvider, UserModel>((ref) => NewUserProvider());
+final newUserProvider = StateNotifierProvider<NewUserProvider, UserModel>(
+    (ref) => NewUserProvider());
 
 class NewUserProvider extends StateNotifier<UserModel> {
   NewUserProvider() : super(UserModel());
@@ -20,6 +19,9 @@ class NewUserProvider extends StateNotifier<UserModel> {
 
   void setUserType(String s) {
     state = state.copyWith(userType: () => s);
+    if (s != 'Farmer') {
+      state = state.copyWith(farmType: [], productType: []);
+    }
   }
 
   void setFullName(String value) {
@@ -39,54 +41,71 @@ class NewUserProvider extends StateNotifier<UserModel> {
   }
 
   void validateUserType({required WidgetRef ref}) {
-    if (state.userType == null) {
+    if (state.gender == null) {
+      CustomDialog.showToast(message: 'Please select gender');
+    } else if (state.userType == null) {
       CustomDialog.showToast(
         message: 'Please select user type',
       );
-    } else if (state.userType == 'Student' && state.farmType.isEmpty) {
-      CustomDialog.showToast(
-        message: 'Please select farm type',
-      );
+    } else if (state.userType == 'Farmer') {
+      if (state.farmType.isEmpty) {
+        CustomDialog.showToast(
+          message: 'Please select Type of product you produce',
+        );
+      } else if (state.farmType.contains('Crops') ||
+          state.farmType.contains('Livestock')) {
+        if (state.productType.isEmpty) {
+          CustomDialog.showToast(
+            message: 'Please select type farm product you produce',
+          );
+        } else {
+          ref.read(currentScreenProvider.notifier).state = 1;
+        }
+      } else {
+        ref.read(currentScreenProvider.notifier).state = 1;
+      }
     } else {
       ref.read(currentScreenProvider.notifier).state = 1;
     }
   }
 
-  bool validateBio() {
-    if (state.name == null) {
-      CustomDialog.showToast(message: 'Please enter full name');
-      return false;
-    } else if (state.phone == null || state.phone!.length < 10) {
-      CustomDialog.showToast(message: 'Please enter a valid phone number');
-      return false;
-    } else if (state.email == null ||
-        RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                .hasMatch(state.email!) ==
-            false) {
-      CustomDialog.showToast(message: 'Please enter email address');
-      return false;
-    } else if (state.password == null || state.password!.length < 6) {
-      CustomDialog.showToast(
-          message: 'Please enter password with at least 6 characters');
-      return false;
+  void addFarmType(String s) {
+    var lits = state.farmType.toList();
+    if (lits.contains(s)) {
+      lits.remove(s);
+      state = state.copyWith(productType: []);
+    } else {
+      lits.add(s);
     }
-    return true;
+    state = state.copyWith(farmType: lits);
+  }
+
+  void addProduct(String s) {
+    var list = state.productType.toList();
+    if (list.contains(s)) {
+      list.remove(s);
+    } else {
+      list.add(s);
+    }
+    state = state.copyWith(productType: list);
+  }
+
+  void setIdNumber(String? value) {
+    state = state.copyWith(ghId: () => value);
   }
 
   void createUser(
       {required WidgetRef ref, required BuildContext context}) async {
-    if (validateBio()) {
-      CustomDialog.showLoading(message: 'Creating user.....');
-      var (succes, message) = await AuthServices.createUser(state);
-      if (succes) {
-        CustomDialog.dismiss();
-        CustomDialog.showSuccess(message: message);
-        state = UserModel();
-        context.go(RouterInfo.loginRoute.path);
-      } else {
-        CustomDialog.dismiss();
-        CustomDialog.showError(message: message);
-      }
+    CustomDialog.showLoading(message: 'Creating user.....');
+    var (succes, message) = await AuthServices.createUser(state);
+    if (succes) {
+      CustomDialog.dismiss();
+      CustomDialog.showSuccess(message: message);
+      state = UserModel();
+      context.go(RouterInfo.loginRoute.path);
+    } else {
+      CustomDialog.dismiss();
+      CustomDialog.showError(message: message);
     }
   }
 }

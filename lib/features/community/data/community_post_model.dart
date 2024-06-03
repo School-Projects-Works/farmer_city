@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 class PostModel {
   String? id;
@@ -37,7 +36,7 @@ class PostModel {
     ValueGetter<String?>? authorName,
     ValueGetter<String?>? authorImage,
     ValueGetter<String?>? authorUserType,
-    ValueGetter<List<String>?>? likes,
+    List<String>? likes,
     ValueGetter<int?>? createdAt,
   }) {
     return PostModel(
@@ -48,9 +47,8 @@ class PostModel {
       authorId: authorId != null ? authorId() : this.authorId,
       authorName: authorName != null ? authorName() : this.authorName,
       authorImage: authorImage != null ? authorImage() : this.authorImage,
-      authorUserType:
-          authorUserType != null ? authorUserType() : this.authorUserType,
-      likes:  this.likes,
+      authorUserType: authorUserType != null ? authorUserType() : this.authorUserType,
+      likes: likes ?? this.likes,
       createdAt: createdAt != null ? createdAt() : this.createdAt,
     );
   }

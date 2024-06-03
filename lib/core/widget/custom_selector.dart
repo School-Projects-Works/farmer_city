@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../utils/styles.dart';
 
-
 class CustomSelector extends ConsumerStatefulWidget {
   const CustomSelector(
       {required this.title,
@@ -13,14 +12,16 @@ class CustomSelector extends ConsumerStatefulWidget {
       this.radius = 10,
       this.padding,
       this.isSelected = false,
+      this.width = 180,
       super.key});
   final String title;
   final Color colors;
   final VoidCallback? onPressed;
-  final Widget? icon;
+  final IconData? icon;
   final double radius;
   final EdgeInsets? padding;
   final bool isSelected;
+  final double width;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CustomSelectorState();
@@ -40,6 +41,7 @@ class _CustomSelectorState extends ConsumerState<CustomSelector> {
       onTap: widget.onPressed,
       child: Container(
         padding: widget.padding,
+        width: widget.width,
         decoration: BoxDecoration(
           color: onHover && !widget.isSelected
               ? widget.colors.withOpacity(.6)
@@ -47,13 +49,24 @@ class _CustomSelectorState extends ConsumerState<CustomSelector> {
                   ? widget.colors
                   : Colors.transparent,
           borderRadius: BorderRadius.circular(widget.radius),
-          border: Border.all(color: onHover ? Colors.white : widget.colors),
+          border: Border.all(
+              color: onHover
+                  ? const Color.fromARGB(255, 131, 121, 121)
+                  : widget.colors),
         ),
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.icon != null) widget.icon!,
+              if (widget.icon != null)
+                Icon(
+                  widget.icon,
+                  color: onHover
+                      ? Colors.white
+                      : !widget.isSelected
+                          ? widget.colors
+                          : Colors.white,
+                ),
               if (widget.icon != null && widget.title.isNotEmpty)
                 const SizedBox(width: 10),
               Text(

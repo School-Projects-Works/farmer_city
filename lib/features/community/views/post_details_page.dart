@@ -1,11 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firmer_city/config/router/router_info.dart';
+import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/functions/time_functions.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/data/user_model.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/comments/provider/comments_provider.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
+import 'package:firmer_city/features/community/provider/community_provider.dart';
 import 'package:firmer_city/features/community/provider/post_provider.dart';
+import 'package:firmer_city/features/main/provider/nav_provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -25,11 +30,11 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   Widget build(BuildContext context) {
     var post = ref.watch(getPostProvider(widget.postId));
     var user = ref.watch(userProvider);
-    var styles = CustomStyles(context: context);
     var breakPoint = ResponsiveBreakpoints.of(context);
-    return SizedBox(
+    return Container(
       width: breakPoint.screenWidth,
       height: breakPoint.screenHeight,
+      padding: const EdgeInsets.only(top: 80),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: post.when(data: (data) {
@@ -44,7 +49,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                 Expanded(
                   child: _buildPostDetail(post: data, user: user),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 25),
                 _buildSideList(user: user)
               ],
             );
@@ -112,9 +117,9 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                       IconButton(
                                         style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all(
+                                              WidgetStateProperty.all(
                                                   Colors.white),
-                                          shape: MaterialStateProperty.all(
+                                          shape: WidgetStateProperty.all(
                                               const CircleBorder()),
                                         ),
                                         icon: const Icon(
@@ -130,9 +135,9 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                       IconButton(
                                         style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all(
+                                              WidgetStateProperty.all(
                                                   Colors.white),
-                                          shape: MaterialStateProperty.all(
+                                          shape: WidgetStateProperty.all(
                                               const CircleBorder()),
                                         ),
                                         icon: const Icon(
@@ -170,7 +175,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                       post.description ?? '',
                       textAlign: TextAlign.justify,
                       style: styles.textStyle(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                           mobile: 16,
                           desktop: 20,
                           height: 1.8,
@@ -219,7 +224,13 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                         if (breakPoint.largerThan(MOBILE))
                           InkWell(
                             onTap: () {
-                              //Todo like or unlike post
+                              if(user.id == null){
+                                ref.read(navProvider.notifier).state = RouterInfo.loginRoute.name;
+                                navigateToRoute(context: context, route: RouterInfo.loginRoute);
+                                return;
+                              }
+                              ref.read(postProvider.notifier).likePost(
+                                  post: post, user: user, ref: ref);
                             },
                             child: Row(
                               children: [
@@ -248,6 +259,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  const Divider(),
                   //Comments Section
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -272,11 +284,13 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                     CircleAvatar(
                                       radius: 15,
                                       backgroundColor: primaryColor,
-                                      backgroundImage: comment
-                                              .writerImage.isNotEmpty
-                                          ? NetworkImage(comment.writerImage)
+                                      backgroundImage: comment.writerImage !=
+                                                  null &&
+                                              comment.writerImage!.isNotEmpty
+                                          ? NetworkImage(comment.writerImage!)
                                           : null,
-                                      child: comment.writerImage.isEmpty
+                                      child: comment.writerImage != null &&
+                                              comment.writerImage!.isNotEmpty
                                           ? const Icon(Icons.person)
                                           : null,
                                     ),
@@ -295,8 +309,8 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                     comment.content,
                                     textAlign: TextAlign.justify,
                                     style: styles.textStyle(
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.6),
+                                        fontWeight: FontWeight.w300,
+                                        height: 1.3),
                                   ),
                                 ),
                               );
@@ -327,12 +341,34 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
             controller: _commentController,
             hintText: 'Add a comment',
             maxLines: 3,
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: () {
-                //Todo add comment
-              },
-            ),
+            suffixIcon: ref.watch(sendingCommentProvider)
+                ? const SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      if (user.id == null) {
+                        ref.read(navProvider.notifier).state =
+                            RouterInfo.loginRoute.name;
+                        navigateToRoute(
+                            context: context, route: RouterInfo.loginRoute);
+                        return;
+                      }
+                      ref.read(postProvider.notifier).addComment(
+                            comment: _commentController.text,
+                            user: user,
+                            post: post,
+                            ref: ref,
+                          );
+                      _commentController.clear();
+                    },
+                  ),
             onSubmitted: (value) {
               //Todo add comment
             },
@@ -345,8 +381,82 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   Widget _buildSideList({required UserModel user}) {
     var styles = CustomStyles(context: context);
     var breakPoint = ResponsiveBreakpoints.of(context);
+    var post = ref.watch(postStream);
     return Container(
       width: breakPoint.screenWidth * .3,
+      height: breakPoint.screenHeight,
+      padding: const EdgeInsets.only(top: 30),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Related Posts',
+                style: styles.textStyle(
+                    fontWeight: FontWeight.bold,
+                    mobile: 30,
+                    desktop: 36,
+                    tablet: 34,
+                    color: primaryColor)),
+            const SizedBox(height: 10),
+            const Divider(
+              thickness: 4,
+              color: primaryColor,
+            ),
+            const SizedBox(height: 20),
+            post.when(data: (data) {
+              return ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(),
+                  shrinkWrap: true,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    var item = data[index];
+                    if (item.id == widget.postId) {
+                      return const SizedBox.shrink();
+                    }
+                    return ListTile(
+                      title: Text(
+                        item.title ?? '',
+                        maxLines: 1,
+                        style: styles.textStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                            text: item.description?.substring(0, 150) ?? '',
+                            style: styles.textStyle(
+                                fontWeight: FontWeight.w300, height: 1.3),
+                            children: [
+                              TextSpan(
+                                  text: '....Read More',
+                                  style: styles.textStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      desktop: 13,
+                                      mobile: 12,
+                                      tablet: 12),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      navigateToName(
+                                          context: context,
+                                          route: RouterInfo.postDetailRoute,
+                                          parameter: {'id': item.id!});
+                                    })
+                            ]),
+                      ),
+                    );
+                  });
+            }, error: (error, stack) {
+              return const Center(
+                child: Text('Error getting Post'),
+              );
+            }, loading: () {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            })
+          ],
+        ),
+      ),
     );
   }
 }
