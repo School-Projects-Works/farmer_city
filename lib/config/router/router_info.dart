@@ -21,4 +21,9 @@ class RouterInfo {
 
   static RouterInfo postDetailRoute =
       RouterInfo(name: 'post-detail', path: '/post-detail/:id');
+
+      static RouterInfo createPostRoute = RouterInfo(name: 'create-post', path: '/create-post');
+      static RouterInfo editPostRoute = RouterInfo(name: 'edit-post', path: '/edit-post/:id');
+
+
 }

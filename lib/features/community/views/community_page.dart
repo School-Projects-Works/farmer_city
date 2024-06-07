@@ -1,6 +1,9 @@
+import 'package:firmer_city/config/router/router_info.dart';
+import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/core/widget/footer_page.dart';
+import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/community/provider/community_provider.dart';
 import 'package:firmer_city/features/community/provider/switch_provider.dart';
 import 'package:firmer_city/utils/styles.dart';
@@ -24,6 +27,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
     var post = ref.watch(postStream);
     var breakPoint = ResponsiveBreakpoints.of(context);
     var styles = CustomStyles(context: context);
+    var user = ref.watch(userProvider);
     return Container(
       width: breakPoint.screenWidth,
       height: breakPoint.screenHeight,
@@ -85,7 +89,16 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                             color: Colors.white,
                                           ),
                                           onPressed: () {
-                                            //todo ask community
+                                             if (user.id == null) {
+                                              navigateToRoute(
+                                                  context: context,
+                                                  route: RouterInfo.loginRoute);
+                                              return;
+                                            }
+                                            navigateToRoute(
+                                                context: context,
+                                                route:
+                                                    RouterInfo.createPostRoute);
                                           }),
                                     ],
                                   ),
@@ -137,7 +150,16 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                           text: '',
                                           radius: 10,
                                           onPressed: () {
-                                            //todo ask community
+                                            if(user.id==null){
+                                              navigateToRoute(
+                                                  context: context,
+                                                  route: RouterInfo.loginRoute);
+                                              return;
+                                            }
+                                            navigateToRoute(
+                                                context: context,
+                                                route:
+                                                    RouterInfo.createPostRoute);
                                           },
                                           icon: const Icon(
                                             Icons.add,

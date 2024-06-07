@@ -56,7 +56,7 @@ class PostProvider extends StateNotifier<List<PostModel>> {
     }
     post = post.copyWith(likes:likes);
     
-    await CommunityServices.updatePost(post, []);
+    await CommunityServices.updatePost(post);
     ref.invalidate(getPostProvider(post.id!));
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
@@ -9,28 +11,11 @@ class CommunityServices{
 
   // save post images to firebase storage
 
-  static Future<List<String>> savePostImages(List<XFile> images,String postId) async {
-   try {
-     List<String> imageUrls = [];
-     for (var image in images) {
-      var data = await image.readAsBytes();
-       var ref = storage.ref().child('post_images').child('$postId/${DateTime.now().millisecondsSinceEpoch}.jpg');
-       await ref.putData(data,SettableMetadata(contentType: 'image/jpeg'));
-       var imageUrl = await ref.getDownloadURL();
-       imageUrls.add(imageUrl);
-     }
-     return imageUrls;
-   } catch (e) {
-     return [];
-   }
-  }
+
 
   // save post to firestore
-  static Future<void> savePost(PostModel data,List<XFile> images) async {
+  static Future<void> savePost(PostModel data) async {
     try {
-      if(images.isNotEmpty){
-        data.images = await savePostImages(images, data.id!);
-      }
       await firestore.collection('posts').doc(data.id).set(data.toMap());
     } catch (e) {
       return;
@@ -56,15 +41,31 @@ class CommunityServices{
   }
 
   // update post
-  static Future<void> updatePost(PostModel data,List<XFile> images) async {
+  static Future<void> updatePost(PostModel data) async {
     try {
-      if(images.isNotEmpty){
-        data.images = await savePostImages(images, data.id!);
-      }
       await firestore.collection('posts').doc(data.id).update(data.toMap());
     } catch (e) {
       return;
     }
+  }
+
+  static Future<List<String>>uploadImages(List<Uint8List> images,String postId)async {
+    try {
+      List<String> urls = [];
+      for (var image in images) {
+        var ref = storage.ref('Post').child(postId).child('${images.indexOf(image)}.jpg');
+        await ref.putData(image,SettableMetadata(contentType: 'image/jpeg'));
+        var url = await ref.getDownloadURL();
+        urls.add(url);
+      }
+      return urls;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static String getId() {
+    return firestore.collection('posts').doc().id;
   }
 
 }

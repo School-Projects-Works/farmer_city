@@ -1,4 +1,7 @@
 import 'package:firmer_city/config/router/router_info.dart';
+import 'package:firmer_city/features/assistant/view/assistant_page.dart';
+import 'package:firmer_city/features/community/views/edit_post.dart';
+import 'package:firmer_city/features/community/views/new_post.dart';
 import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/features/main/views/home_page.dart';
 import 'package:firmer_city/features/main/views/main_page.dart';
@@ -40,15 +43,23 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
           } else if (route.contains('home')) {
             ref.read(navProvider.notifier).state = RouterInfo.homeRoute.name;
             return null;
+          } else if (route.contains('assistant') &&
+              box.contains(RouterInfo.assistantRoute.name)) {
+            return null;
           } else if (route.contains('profile') &&
               box.contains(RouterInfo.profileRoute.name)) {
             return null;
           } else if (route.contains('community') &&
               box.contains(RouterInfo.communityRoute.name)) {
             return null;
-          } 
-          else if (route.contains('post-detail') &&
+          } else if (route.contains('post-detail') &&
               box.contains(RouterInfo.postDetailRoute.name)) {
+            return null;
+          } else if (route.contains('create-post') &&
+              box.contains(RouterInfo.createPostRoute.name)) {
+            return null;
+          }else if (route.contains('edit-post') &&
+              box.contains(RouterInfo.editPostRoute.name)) {
             return null;
           }
           else {
@@ -87,13 +98,36 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
                     name: RouterInfo.communityRoute.name,
                     builder: (context, state) => const CommunityPage()),
                 GoRoute(
+                    path: RouterInfo.assistantRoute.path,
+                    name: RouterInfo.assistantRoute.name,
+                    builder: (context, state) {
+                      return const AssitantPage();
+                    }),
+                GoRoute(
                     path: RouterInfo.postDetailRoute.path,
                     name: RouterInfo.postDetailRoute.name,
                     builder: (context, state) {
                       final postId = state.pathParameters['id'];
                       return PostDetailPage(
-                        postId: postId??'',
+                        postId: postId ?? '',
                       );
                     }),
+                GoRoute(
+                  path: RouterInfo.createPostRoute.path,
+                  name: RouterInfo.createPostRoute.name,
+                  builder: (context, state) {
+                    return const NewPost();
+                  },
+                ),
+                GoRoute(
+                  path: RouterInfo.editPostRoute.path,
+                  name: RouterInfo.editPostRoute.name,
+                  builder: (context, state) {
+                    final postId = state.pathParameters['id'];
+                    return EditPost(
+                      postId: postId!,
+                    );
+                  },
+                ),
               ]),
         ]);
