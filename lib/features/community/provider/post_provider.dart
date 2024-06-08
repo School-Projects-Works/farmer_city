@@ -1,3 +1,4 @@
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/data/user_model.dart';
 import 'package:firmer_city/features/comments/model/comment_data.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
@@ -21,7 +22,19 @@ class PostProvider extends StateNotifier<List<PostModel>> {
     state = [...state, post];
   }
 
-  void deletePost(String s) {}
+  void deletePost(String postId) async {
+    CustomDialog.dismiss();
+    CustomDialog.showLoading(message: 'Deleting post....');
+
+    bool success = await CommunityServices.deletePost(postId);
+    if (success) {
+      var list = state.where((element) => element.id != postId).toList();
+      state = list;
+    }
+    CustomDialog.dismiss();
+    CustomDialog.showToast(
+        message: success ? 'Post deleted' : 'Failed to delete post');
+  }
 
   void addComment(
       {required String comment,
@@ -54,14 +67,14 @@ class PostProvider extends StateNotifier<List<PostModel>> {
     } else {
       likes.add(user.id!);
     }
-    post = post.copyWith(likes:likes);
-    
+    post = post.copyWith(likes: likes);
+
     await CommunityServices.updatePost(post);
     ref.invalidate(getPostProvider(post.id!));
   }
 }
 
-final filterProvider = StateProvider<String>((ref) => '');
+final filterProvider = StateProvider.autoDispose<String>((ref) => '');
 
 final filteredPostProvider = Provider.autoDispose<List<PostModel>>((ref) {
   final posts = ref.watch(postProvider);
@@ -69,7 +82,10 @@ final filteredPostProvider = Provider.autoDispose<List<PostModel>>((ref) {
   if (query.isEmpty) {
     return posts;
   }
-  return posts.where((element) => element.title!.contains(query)).toList();
+  return posts
+      .where((element) =>
+          element.title!.toLowerCase().contains(query.toLowerCase()))
+      .toList();
 });
 
 final getPostProvider =

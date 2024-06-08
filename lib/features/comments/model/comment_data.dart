@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:faker/faker.dart';
 import 'package:flutter/widgets.dart';
 
 class CommentDataModel {
@@ -65,7 +66,8 @@ class CommentDataModel {
 
   String toJson() => json.encode(toMap());
 
-  factory CommentDataModel.fromJson(String source) => CommentDataModel.fromMap(json.decode(source));
+  factory CommentDataModel.fromJson(String source) =>
+      CommentDataModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -75,25 +77,44 @@ class CommentDataModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is CommentDataModel &&
-      other.id == id &&
-      other.postId == postId &&
-      other.writerId == writerId &&
-      other.writerName == writerName &&
-      other.writerImage == writerImage &&
-      other.content == content &&
-      other.createdAt == createdAt;
+        other.id == id &&
+        other.postId == postId &&
+        other.writerId == writerId &&
+        other.writerName == writerName &&
+        other.writerImage == writerImage &&
+        other.content == content &&
+        other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      postId.hashCode ^
-      writerId.hashCode ^
-      writerName.hashCode ^
-      writerImage.hashCode ^
-      content.hashCode ^
-      createdAt.hashCode;
+        postId.hashCode ^
+        writerId.hashCode ^
+        writerName.hashCode ^
+        writerImage.hashCode ^
+        content.hashCode ^
+        createdAt.hashCode;
+  }
+
+  static List<CommentDataModel> dummyComments(String postId) {
+    final _faker = Faker();
+    var randomLength = _faker.randomGenerator.integer(20, min: 1);
+    List<CommentDataModel> comments = [];
+    for (int i = 0; i < randomLength; i++) {
+     var comment = CommentDataModel(
+        id: _faker.guid.guid(),
+        postId: postId,
+        writerId: _faker.guid.guid(),
+        writerName: _faker.person.name(),
+        writerImage: _faker.image.image(),
+        content: _faker.lorem.sentences(_faker.randomGenerator.integer(6, min: 1)).join(' '),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+      );
+      comments.add(comment);
+    }
+    return comments;
   }
 }

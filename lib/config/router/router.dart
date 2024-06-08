@@ -5,6 +5,7 @@ import 'package:firmer_city/features/community/views/new_post.dart';
 import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/features/main/views/home_page.dart';
 import 'package:firmer_city/features/main/views/main_page.dart';
+import 'package:firmer_city/features/market/vews/market_page.dart';
 import 'package:firmer_city/features/profile/views/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +47,9 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
           } else if (route.contains('assistant') &&
               box.contains(RouterInfo.assistantRoute.name)) {
             return null;
+          } else if (route.contains('market') &&
+              box.contains(RouterInfo.marketRoute.name)) {
+            return null;
           } else if (route.contains('profile') &&
               box.contains(RouterInfo.profileRoute.name)) {
             return null;
@@ -58,11 +62,10 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
           } else if (route.contains('create-post') &&
               box.contains(RouterInfo.createPostRoute.name)) {
             return null;
-          }else if (route.contains('edit-post') &&
+          } else if (route.contains('edit-post') &&
               box.contains(RouterInfo.editPostRoute.name)) {
             return null;
-          }
-          else {
+          } else {
             ref.read(navProvider.notifier).state = RouterInfo.homeRoute.name;
             return RouterInfo.homeRoute.path;
           }
@@ -129,5 +132,9 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
                     );
                   },
                 ),
+                GoRoute(
+                    path: RouterInfo.marketRoute.path,
+                    name: RouterInfo.marketRoute.name,
+                    builder: (context, state) => const MarketPage()),
               ]),
         ]);

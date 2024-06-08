@@ -16,6 +16,9 @@ class Assets {
   static const String imagesFormerLight = 'assets/images/former_light.png';
   static const String slideSlide2 = 'assets/slide/slide_2.jpg';
   static const String slideSlide3 = 'assets/slide/slide_3.jpg';
+  static const String slideSlideOne = 'assets/slide/slide_one.jpg';
+  static const String slideSlideThree = 'assets/slide/slide_three.jpg';
+  static const String slideSlideTwo = 'assets/slide/slide_two.jpg';
   static const String slideSlidw1 = 'assets/slide/slidw_1.avif';
 
 }

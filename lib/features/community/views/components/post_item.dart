@@ -1,6 +1,7 @@
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/functions/time_functions.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/comments/provider/comments_provider.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
 import 'package:firmer_city/features/community/provider/post_provider.dart';
@@ -58,9 +59,11 @@ class _PostItemState extends ConsumerState<PostItem> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (widget.post.images.isNotEmpty)
+              if (widget.post.images.isNotEmpty &&
+                  widget.post.images.first.isNotEmpty)
                 Container(
                   width: double.infinity,
+                  alignment: Alignment.topRight,
                   height: 350,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.only(
@@ -68,19 +71,61 @@ class _PostItemState extends ConsumerState<PostItem> {
                       topRight: Radius.circular(10),
                     ),
                     image: DecorationImage(
-                      image: NetworkImage(widget.post.images.isNotEmpty
-                          ? widget.post.images.first
-                          : ''),
+                      image: NetworkImage(widget.post.images.first),
                       fit: BoxFit.cover,
                     ),
                   ),
                   child: widget.post.authorId == user.id
-                      ? IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            ref
-                                .read(postProvider.notifier)
-                                .deletePost(widget.post.id!);
+                      ? PopupMenuButton<int>(
+                          itemBuilder: (context) {
+                            return [
+                              const PopupMenuItem(
+                                padding: EdgeInsets.symmetric(horizontal: 30),
+                                value: 0,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text('Edit'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                padding: EdgeInsets.symmetric(horizontal: 30),
+                                value: 1,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text('Delete'),
+                                  ],
+                                ),
+                              ),
+                            ];
+                          },
+                          onSelected: (value) {
+                            if (value == 0) {
+                              navigateToName(
+                                  context: context,
+                                  route: RouterInfo.editPostRoute,
+                                  parameter: {'id': widget.post.id!});
+                            } else {
+                              CustomDialog.showInfo(
+                                  message:
+                                      'Are you sure you want to delete this post?',
+                                  buttonText: 'Delete',
+                                  onPressed: () {
+                                    ref
+                                        .read(postProvider.notifier)
+                                        .deletePost(widget.post.id!);
+                                  });
+                            }
                           },
                         )
                       : const SizedBox.shrink(),
@@ -90,10 +135,77 @@ class _PostItemState extends ConsumerState<PostItem> {
                   width: double.infinity,
                   height: 200,
                   color: Colors.white,
-                  child: const Icon(
-                    Icons.image,
-                    color: Colors.grey,
-                    size: 50,
+                  child: Stack(
+                    children: [
+                      if (widget.post.authorId == user.id)
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: PopupMenuButton<int>(
+                            itemBuilder: (context) {
+                              return [
+                                const PopupMenuItem(
+                                  padding: EdgeInsets.symmetric(horizontal: 30),
+                                  value: 0,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text('Edit'),
+                                    ],
+                                  ),
+                                ),
+                                const PopupMenuItem(
+                                  padding: EdgeInsets.symmetric(horizontal: 30),
+                                  value: 1,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text('Delete'),
+                                    ],
+                                  ),
+                                ),
+                              ];
+                            },
+                            onSelected: (value) {
+                              if (value == 0) {
+                                navigateToName(
+                                    context: context,
+                                    route: RouterInfo.editPostRoute,
+                                    parameter: {'id': widget.post.id!});
+                              } else {
+                                CustomDialog.showInfo(
+                                    message:
+                                        'Are you sure you want to delete this post?',
+                                    buttonText: 'Delete',
+                                    onPressed: () {
+                                      ref
+                                          .read(postProvider.notifier)
+                                          .deletePost(widget.post.id!);
+                                    });
+                              }
+                            },
+                          ),
+                        ),
+                      const Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.grey,
+                          size: 50,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               Padding(

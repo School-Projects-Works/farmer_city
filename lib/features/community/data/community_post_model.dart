@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 class PostModel {
   String? id;
@@ -13,6 +14,7 @@ class PostModel {
   String? authorImage;
   String? authorUserType;
   List<String> likes;
+  bool isDeleted;
   int? createdAt;
   PostModel({
     this.id,
@@ -24,6 +26,7 @@ class PostModel {
     this.authorImage,
     this.authorUserType,
     this.likes = const [],
+     this.isDeleted=false,
     this.createdAt,
   });
 
@@ -37,6 +40,7 @@ class PostModel {
     ValueGetter<String?>? authorImage,
     ValueGetter<String?>? authorUserType,
     List<String>? likes,
+    bool? isDeleted,
     ValueGetter<int?>? createdAt,
   }) {
     return PostModel(
@@ -49,6 +53,7 @@ class PostModel {
       authorImage: authorImage != null ? authorImage() : this.authorImage,
       authorUserType: authorUserType != null ? authorUserType() : this.authorUserType,
       likes: likes ?? this.likes,
+      isDeleted: isDeleted ?? this.isDeleted,
       createdAt: createdAt != null ? createdAt() : this.createdAt,
     );
   }
@@ -64,6 +69,7 @@ class PostModel {
       'authorImage': authorImage,
       'authorUserType': authorUserType,
       'likes': likes,
+      'isDeleted': isDeleted,
       'createdAt': createdAt,
     };
   }
@@ -79,6 +85,7 @@ class PostModel {
       authorImage: map['authorImage'],
       authorUserType: map['authorUserType'],
       likes: List<String>.from(map['likes']),
+      isDeleted: map['isDeleted'] ?? false,
       createdAt: map['createdAt']?.toInt(),
     );
   }
@@ -90,45 +97,46 @@ class PostModel {
 
   @override
   String toString() {
-    return 'PostModel(id: $id, images: $images, title: $title, description: $description, authorId: $authorId, authorName: $authorName, authorImage: $authorImage, authorUserType: $authorUserType, likes: $likes, createdAt: $createdAt)';
+    return 'PostModel(id: $id, images: $images, title: $title, description: $description, authorId: $authorId, authorName: $authorName, authorImage: $authorImage, authorUserType: $authorUserType, likes: $likes, isDeleted: $isDeleted, createdAt: $createdAt)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+  
     return other is PostModel &&
-        other.id == id &&
-        listEquals(other.images, images) &&
-        other.title == title &&
-        other.description == description &&
-        other.authorId == authorId &&
-        other.authorName == authorName &&
-        other.authorImage == authorImage &&
-        other.authorUserType == authorUserType &&
-        listEquals(other.likes, likes) &&
-        other.createdAt == createdAt;
+      other.id == id &&
+      listEquals(other.images, images) &&
+      other.title == title &&
+      other.description == description &&
+      other.authorId == authorId &&
+      other.authorName == authorName &&
+      other.authorImage == authorImage &&
+      other.authorUserType == authorUserType &&
+      listEquals(other.likes, likes) &&
+      other.isDeleted == isDeleted &&
+      other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        images.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        authorId.hashCode ^
-        authorName.hashCode ^
-        authorImage.hashCode ^
-        authorUserType.hashCode ^
-        likes.hashCode ^
-        createdAt.hashCode;
+      images.hashCode ^
+      title.hashCode ^
+      description.hashCode ^
+      authorId.hashCode ^
+      authorName.hashCode ^
+      authorImage.hashCode ^
+      authorUserType.hashCode ^
+      likes.hashCode ^
+      isDeleted.hashCode ^
+      createdAt.hashCode;
   }
 
   static List<PostModel> dummy() {
     final _faker = Faker();
 
     return List.generate(15, (index) {
-    
       //generate random id of string from uuid
       var count = _faker.randomGenerator.integer(100, min: 1);
       var likes = List.generate(count, (index) => _faker.guid.guid());
@@ -142,7 +150,7 @@ class PostModel {
                   'Agriculture',
                   'Nature',
                   'Farming',
-                  'Crops'
+                  'Crops', 'Animals', 'Food'
                 ])),
         title: _faker.lorem.sentences(2).join(' '),
         description: _faker.lorem.sentences(100).join(' '),
@@ -151,7 +159,7 @@ class PostModel {
         authorImage: _faker.image.image(),
         authorUserType: _faker.lorem.word(),
         likes: likes,
-        createdAt: _faker.date.dateTime().millisecondsSinceEpoch,
+       isDeleted: false,
       );
     });
   }
