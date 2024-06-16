@@ -89,7 +89,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                             color: Colors.white,
                                           ),
                                           onPressed: () {
-                                             if (user.id == null) {
+                                            if (user.id == null) {
                                               navigateToRoute(
                                                   context: context,
                                                   route: RouterInfo.loginRoute);
@@ -150,7 +150,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                           text: '',
                                           radius: 10,
                                           onPressed: () {
-                                            if(user.id==null){
+                                            if (user.id == null) {
                                               navigateToRoute(
                                                   context: context,
                                                   route: RouterInfo.loginRoute);
@@ -182,9 +182,27 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                             child: Text('No post available'),
                           );
                         }
-                        return Wrap(
-                          children:
-                              filterdPost.map((e) => PostItem(e)).toList(),
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: breakPoint.screenWidth <= 600
+                                ? 1
+                                : breakPoint.screenWidth > 600 &&
+                                        breakPoint.screenWidth <= 900
+                                    ? 2
+                                    : breakPoint.screenWidth > 900 &&
+                                            breakPoint.screenWidth <= 1300
+                                        ? 3
+                                        : 4,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.9,
+                          ),
+                          itemCount: filterdPost.length,
+                          itemBuilder: (context, index) =>
+                              PostItem(filterdPost[index]),
                         );
                       }, error: (error, stack) {
                         return const Center(

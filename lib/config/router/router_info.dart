@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class RouterInfo {
   String name;
   String path;
@@ -24,6 +26,9 @@ class RouterInfo {
 
       static RouterInfo createPostRoute = RouterInfo(name: 'create-post', path: '/create-post');
       static RouterInfo editPostRoute = RouterInfo(name: 'edit-post', path: '/edit-post/:id');
+
+
+      static RouterInfo cartRoute = RouterInfo(name: 'cart', path: '/cart');
 
 
 }

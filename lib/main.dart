@@ -13,7 +13,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //remove hashbang from url
   setPathUrlStrategy();
@@ -23,13 +23,14 @@ void main() async{
   );
   //initialize hive
   //get app directory
-  if(!kIsWeb) {
+  if (!kIsWeb) {
     final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
     var path = '${appDocumentsDir.path}/db';
     Hive.init(path);
   }
   await Hive.openBox('user');
   await Hive.openBox('route');
+  await Hive.openBox('cart');
   runApp(const ProviderScope(child: MyApp()));
 }
 

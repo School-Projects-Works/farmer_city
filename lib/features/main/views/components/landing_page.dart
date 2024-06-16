@@ -36,7 +36,7 @@ class LandingPage extends ConsumerWidget {
     var styles = CustomStyles(context: context);
     return CarouselSlider(
       options: CarouselOptions(
-          height: breakPoint.screenHeight * 0.85,
+          height: breakPoint.screenHeight * 0.6,
           viewportFraction: 1.0,
           autoPlay: true,
           autoPlayInterval: const Duration(seconds: 3),

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:firmer_city/core/constant/constant_strings.dart';
 import 'package:firmer_city/features/auth/data/user_model.dart';

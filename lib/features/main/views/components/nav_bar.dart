@@ -131,38 +131,48 @@ class _NavBarState extends ConsumerState<NavBar> {
               ],
             ),
           if (breakPoint.smallerOrEqualTo(MOBILE))
-            PopupMenuButton(
+            PopupMenuButton<RouterInfo>(
               color: Colors.white,
               offset: const Offset(10, 70),
               itemBuilder: (context) => [
-                const PopupMenuItem(
-                  padding: EdgeInsets.only(right: 130, left: 20),
-                  child: Text('Home'),
+                 PopupMenuItem(
+                  value: RouterInfo.homeRoute,
+                  padding: const EdgeInsets.only(right: 130, left: 20),
+                  child: const Text('Home'),
                 ),
-                const PopupMenuItem(
-                  padding: EdgeInsets.only(right: 130, left: 20),
-                  child: Text('Community'),
+                 PopupMenuItem(
+                  value: RouterInfo.communityRoute,
+                  padding: const EdgeInsets.only(right: 130, left: 20),
+                  child: const Text('Community'),
                 ),
-                const PopupMenuItem(
-                  padding: EdgeInsets.only(right: 130, left: 20),
-                  child: Text('Market'),
+                 PopupMenuItem(
+                  value: RouterInfo.marketRoute,
+                  padding: const EdgeInsets.only(right: 130, left: 20),
+                  child: const Text('Market'),
                 ),
-                const PopupMenuItem(
-                  padding: EdgeInsets.only(right: 130, left: 20),
-                  child: Text('Assistant'),
+                 PopupMenuItem(
+                  value: RouterInfo.assistantRoute,
+                  padding: const EdgeInsets.only(right: 130, left: 20),
+                  child: const Text('Assistant'),
                 ),
                 if (user.id == null)
-                  const PopupMenuItem(
-                    padding: EdgeInsets.only(right: 130, left: 20),
-                    child: Text('Login'),
+                   PopupMenuItem(
+                    value: RouterInfo.loginRoute,
+                    padding: const EdgeInsets.only(right: 130, left: 20),
+                    child: const Text('Login'),
                   )
                 else
-                  const PopupMenuItem(
-                    padding: EdgeInsets.only(right: 130, left: 20),
-                    child: Text('Profile'),
+                   PopupMenuItem(
+                    value:  RouterInfo.profileRoute,
+                    padding: const EdgeInsets.only(right: 130, left: 20),
+                    child: const Text('Profile'),
                   ),
               ],
               icon: const Icon(Icons.menu),
+              onSelected: (RouterInfo value) {
+                ref.read(navProvider.notifier).state = value.name;
+                navigateToRoute(context: context, route: value);
+              },
             ),
         ],
       ),

@@ -9,7 +9,6 @@ import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import '../../../auth/provider/login_provider.dart';
 
 class PostItem extends ConsumerStatefulWidget {
@@ -36,11 +35,7 @@ class _PostItemState extends ConsumerState<PostItem> {
       },
       child: Card(
         child: Container(
-          width: breakPoint.isMobile
-              ? breakPoint.screenWidth
-              : breakPoint.isTablet
-                  ? breakPoint.screenWidth * .45
-                  : breakPoint.screenWidth * .3,
+          // height: 450,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.only(
@@ -61,87 +56,22 @@ class _PostItemState extends ConsumerState<PostItem> {
             children: [
               if (widget.post.images.isNotEmpty &&
                   widget.post.images.first.isNotEmpty)
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.topRight,
-                  height: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.topRight,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(widget.post.images.first),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    image: DecorationImage(
-                      image: NetworkImage(widget.post.images.first),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: widget.post.authorId == user.id
-                      ? PopupMenuButton<int>(
-                          itemBuilder: (context) {
-                            return [
-                              const PopupMenuItem(
-                                padding: EdgeInsets.symmetric(horizontal: 30),
-                                value: 0,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.edit,
-                                      color: Colors.blue,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text('Edit'),
-                                  ],
-                                ),
-                              ),
-                              const PopupMenuItem(
-                                padding: EdgeInsets.symmetric(horizontal: 30),
-                                value: 1,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text('Delete'),
-                                  ],
-                                ),
-                              ),
-                            ];
-                          },
-                          onSelected: (value) {
-                            if (value == 0) {
-                              navigateToName(
-                                  context: context,
-                                  route: RouterInfo.editPostRoute,
-                                  parameter: {'id': widget.post.id!});
-                            } else {
-                              CustomDialog.showInfo(
-                                  message:
-                                      'Are you sure you want to delete this post?',
-                                  buttonText: 'Delete',
-                                  onPressed: () {
-                                    ref
-                                        .read(postProvider.notifier)
-                                        .deletePost(widget.post.id!);
-                                  });
-                            }
-                          },
-                        )
-                      : const SizedBox.shrink(),
-                )
-              else
-                Container(
-                  width: double.infinity,
-                  height: 200,
-                  color: Colors.white,
-                  child: Stack(
-                    children: [
-                      if (widget.post.authorId == user.id)
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: PopupMenuButton<int>(
+                    child: widget.post.authorId == user.id
+                        ? PopupMenuButton<int>(
                             itemBuilder: (context) {
                               return [
                                 const PopupMenuItem(
@@ -192,20 +122,89 @@ class _PostItemState extends ConsumerState<PostItem> {
                                     });
                               }
                             },
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                )
+              else
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: Stack(
+                      children: [
+                        if (widget.post.authorId == user.id)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: PopupMenuButton<int>(
+                              itemBuilder: (context) {
+                                return [
+                                  const PopupMenuItem(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    value: 0,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          color: Colors.blue,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text('Edit'),
+                                      ],
+                                    ),
+                                  ),
+                                  const PopupMenuItem(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    value: 1,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text('Delete'),
+                                      ],
+                                    ),
+                                  ),
+                                ];
+                              },
+                              onSelected: (value) {
+                                if (value == 0) {
+                                  navigateToName(
+                                      context: context,
+                                      route: RouterInfo.editPostRoute,
+                                      parameter: {'id': widget.post.id!});
+                                } else {
+                                  CustomDialog.showInfo(
+                                      message:
+                                          'Are you sure you want to delete this post?',
+                                      buttonText: 'Delete',
+                                      onPressed: () {
+                                        ref
+                                            .read(postProvider.notifier)
+                                            .deletePost(widget.post.id!);
+                                      });
+                                }
+                              },
+                            ),
+                          ),
+                        const Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Icon(
+                            Icons.image,
+                            color: Colors.grey,
+                            size: 50,
                           ),
                         ),
-                      const Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: Icon(
-                          Icons.image,
-                          color: Colors.grey,
-                          size: 50,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               Padding(
@@ -260,12 +259,12 @@ class _PostItemState extends ConsumerState<PostItem> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(widget.post.description ?? '',
-                    maxLines: 4,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: styles.textStyle(
                       fontWeight: FontWeight.w500,
                       mobile: 14,
-                      desktop: 16,
+                      desktop: 15,
                       color: Colors.grey,
                     )),
               ),

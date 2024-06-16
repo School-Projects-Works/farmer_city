@@ -1,5 +1,6 @@
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/features/assistant/view/assistant_page.dart';
+import 'package:firmer_city/features/cart/views/cart_page.dart';
 import 'package:firmer_city/features/community/views/edit_post.dart';
 import 'package:firmer_city/features/community/views/new_post.dart';
 import 'package:firmer_city/features/main/provider/nav_provider.dart';
@@ -61,6 +62,9 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
             return null;
           } else if (route.contains('create-post') &&
               box.contains(RouterInfo.createPostRoute.name)) {
+            return null;
+          } else if (route.contains('cart') &&
+              box.contains(RouterInfo.cartRoute.name)) {
             return null;
           } else if (route.contains('edit-post') &&
               box.contains(RouterInfo.editPostRoute.name)) {
@@ -136,5 +140,11 @@ GoRouter routerConfig(WidgetRef ref) => GoRouter(
                     path: RouterInfo.marketRoute.path,
                     name: RouterInfo.marketRoute.name,
                     builder: (context, state) => const MarketPage()),
+                GoRoute(
+                    path: RouterInfo.cartRoute.path,
+                    name: RouterInfo.cartRoute.name,
+                    builder: (context, state) {
+                      return const CartPage();
+                    }),
               ]),
         ]);

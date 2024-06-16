@@ -10,10 +10,13 @@ class Assets {
   static const String fontsRalewayLight = 'assets/fonts/Raleway-Light.ttf';
   static const String fontsRalewayMedium = 'assets/fonts/Raleway-Medium.ttf';
   static const String fontsRalewayRegular = 'assets/fonts/Raleway-Regular.ttf';
+  static const String imagesAt = 'assets/images/at.png';
   static const String imagesFarmerIcon = 'assets/images/farmer_icon.png';
   static const String imagesFarmerLogo = 'assets/images/farmer_logo.png';
   static const String imagesFarmerSplash = 'assets/images/farmer_splash.png';
   static const String imagesFormerLight = 'assets/images/former_light.png';
+  static const String imagesMtn = 'assets/images/mtn.jpg';
+  static const String imagesTelecel = 'assets/images/telecel.jpg';
   static const String slideSlide2 = 'assets/slide/slide_2.jpg';
   static const String slideSlide3 = 'assets/slide/slide_3.jpg';
   static const String slideSlideOne = 'assets/slide/slide_one.jpg';

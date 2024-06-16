@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:firmer_city/features/market/data/product_model.dart';
 import 'package:firmer_city/features/market/services/market_services.dart';
 
@@ -57,4 +56,5 @@ class ProductProvider extends StateNotifier<FilteredProducts> {
       state = state.copyWith(filteredProducts: filtered);
     }
   }
+
 }
