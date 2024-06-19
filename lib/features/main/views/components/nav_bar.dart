@@ -1,5 +1,6 @@
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/functions/navigation.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
@@ -106,9 +107,21 @@ class _NavBarState extends ConsumerState<NavBar> {
                             context: context, route: RouterInfo.loginRoute);
                       })
                 else
-                  PopupMenuButton(
+                  PopupMenuButton<String>(
                     color: Colors.white,
                     offset: const Offset(10, 70),
+                    onSelected: (String value) {
+                      if (value == 'logout') {
+                        CustomDialog.showInfo(
+                            message: 'Are you sure you want to logout?',
+                            buttonText: 'Yes',
+                            onPressed: () {
+                              ref
+                                  .read(loginProvider.notifier)
+                                  .signOut(context: context, ref: ref);
+                            });
+                      }
+                    },
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         padding: EdgeInsets.only(right: 130, left: 20),
@@ -117,6 +130,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                       const PopupMenuItem(
                         padding: EdgeInsets.only(right: 130, left: 20),
                         child: Text('Logout'),
+                        value: 'logout',
                       ),
                     ],
                     child: CircleAvatar(
@@ -135,35 +149,35 @@ class _NavBarState extends ConsumerState<NavBar> {
               color: Colors.white,
               offset: const Offset(10, 70),
               itemBuilder: (context) => [
-                 PopupMenuItem(
+                PopupMenuItem(
                   value: RouterInfo.homeRoute,
                   padding: const EdgeInsets.only(right: 130, left: 20),
                   child: const Text('Home'),
                 ),
-                 PopupMenuItem(
+                PopupMenuItem(
                   value: RouterInfo.communityRoute,
                   padding: const EdgeInsets.only(right: 130, left: 20),
                   child: const Text('Community'),
                 ),
-                 PopupMenuItem(
+                PopupMenuItem(
                   value: RouterInfo.marketRoute,
                   padding: const EdgeInsets.only(right: 130, left: 20),
                   child: const Text('Market'),
                 ),
-                 PopupMenuItem(
+                PopupMenuItem(
                   value: RouterInfo.assistantRoute,
                   padding: const EdgeInsets.only(right: 130, left: 20),
                   child: const Text('Assistant'),
                 ),
                 if (user.id == null)
-                   PopupMenuItem(
+                  PopupMenuItem(
                     value: RouterInfo.loginRoute,
                     padding: const EdgeInsets.only(right: 130, left: 20),
                     child: const Text('Login'),
                   )
                 else
-                   PopupMenuItem(
-                    value:  RouterInfo.profileRoute,
+                  PopupMenuItem(
+                    value: RouterInfo.profileRoute,
                     padding: const EdgeInsets.only(right: 130, left: 20),
                     child: const Text('Profile'),
                   ),

@@ -138,6 +138,10 @@ class UserProvider extends StateNotifier<UserModel> {
     CustomDialog.dismiss();
     CustomDialog.showSuccess(message: 'User updated successfully');
   }
+
+  void logout() async{
+    state = UserModel();
+  }
 }
 
 final userImage = StateProvider<XFile?>((ref) => null);
