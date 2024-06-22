@@ -1,43 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter/widgets.dart';
 
-const primaryColor = Color(0xFF032F2F);
-const primaryColorLight = Color(0xFFE3F2FD);
-const secondaryColor = Color(0xFFEF6538);
-const secondaryColorLight = Color(0xFFFFE0B2);
-
-class CustomStyles {
+class Styles {
   final BuildContext context;
-  CustomStyles({
-    required this.context,
-  });
-  TextStyle textStyle(
-      {double mobile = 16,
-      double tablet = 16,
-      double desktop = 16,
-      double largeDesktop = 15,
-      Color? color,
-      FontWeight? fontWeight,
-      String fontFamily = 'OpenSans',
-      double? height,
-      double? wordSpacing,
-      double? letterSpacing,
-      TextDecoration? decoration}) {
-    return TextStyle(
-        fontSize: ResponsiveValue<double>(context,
-            defaultValue: mobile,
-            conditionalValues: [
-              Condition.equals(name: MOBILE, value: mobile),
-              Condition.equals(name: TABLET, value: tablet),
-              Condition.equals(name: DESKTOP, value: desktop),
-              Condition.equals(name: '4K', value: largeDesktop),
-            ]).value,
-        color: color,
-        fontWeight: fontWeight,
-        height: height,
-        wordSpacing: wordSpacing,
-        letterSpacing: letterSpacing,
-        fontFamily: fontFamily,
-        decoration: decoration);
-  }
+  Styles(this.context);
+
+  double get width => MediaQuery.of(context).size.width;
+  double get height => MediaQuery.of(context).size.height;
+
+  bool get isMobile => width < 768;
+  bool get isTablet => width >= 768 && width < 1024;
+  bool get isDesktop => width >= 1024;
+
+  bool get smallerThanTablet => width < 1024;
+  bool get largerThanTablet => width >= 1024;
+  bool get largerThanMobile => width >= 768;
+
+  bool get isPortrait => height > width;
+  bool get isLandscape => width > height;
+
+  Widget rowColumnWidget(List<Widget> children,
+          {bool isRow = true,
+          MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+          MainAxisSize mainAxisSize = MainAxisSize.max,
+          CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.start,
+          EdgeInsetsGeometry padding = EdgeInsets.zero}) =>
+      isRow
+          ? Row(
+              mainAxisAlignment: mainAxisAlignment,
+              mainAxisSize: mainAxisSize,
+              crossAxisAlignment: crossAxisAlignment,
+              children: children,
+            )
+          : Column(
+              mainAxisAlignment: mainAxisAlignment,
+              mainAxisSize: mainAxisSize,
+              crossAxisAlignment: crossAxisAlignment,
+              children: children,
+            );
+
+  TextStyle title(
+          {Color? color,
+          FontWeight? fontWeight,
+          double mobile = 20,
+          double tablet = 25,
+          double desktop = 30,
+          String? fontFamily,
+          FontStyle? style,
+          double height = 1.5}) =>
+      TextStyle(
+          color: color ?? Colors.black,
+          fontWeight: fontWeight ?? FontWeight.bold,
+          fontFamily: fontFamily ?? 'OpenSans',
+          fontStyle: style ?? FontStyle.normal,
+          height: height,
+          fontSize: isMobile
+              ? mobile
+              : isTablet
+                  ? tablet
+                  : desktop);
+
+  TextStyle subtitle(
+          {Color? color,
+          FontWeight? fontWeight,
+          double mobile = 15,
+          double tablet = 20,
+          double desktop = 25,
+          String? fontFamily,
+          FontStyle? style,
+          double height = 1.5}) =>
+      TextStyle(
+          color: color ?? Colors.black,
+          fontWeight: fontWeight ?? FontWeight.normal,
+          fontFamily: fontFamily ?? 'OpenSans',
+          fontStyle: style ?? FontStyle.normal,
+          height: height,
+          fontSize: isMobile
+              ? mobile
+              : isTablet
+                  ? tablet
+                  : desktop);
+
+  TextStyle body(
+          {Color? color,
+          FontWeight? fontWeight,
+          double mobile = 12,
+          double tablet = 15,
+          double desktop = 18,
+          String? fontFamily,
+          FontStyle? style,
+          double height = 1.5}) =>
+      TextStyle(
+          color: color ?? Colors.black,
+          fontWeight: fontWeight ?? FontWeight.normal,
+          fontFamily: fontFamily ?? 'OpenSans',
+          fontStyle: style ?? FontStyle.normal,
+          height: height,
+          fontSize: isMobile
+              ? mobile
+              : isTablet
+                  ? tablet
+                  : desktop);
 }

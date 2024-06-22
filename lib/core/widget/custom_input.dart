@@ -57,7 +57,7 @@ class CustomTextFields extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     return TextFormField(
       keyboardType: keyboardType,
       controller: controller,
@@ -75,7 +75,7 @@ class CustomTextFields extends ConsumerWidget {
       textCapitalization: isCapitalized!
           ? TextCapitalization.characters
           : TextCapitalization.none,
-      style: styles.textStyle(
+      style: styles.body(
           fontWeight: FontWeight.w500,
           mobile: 14,
           color: isReadOnly!
@@ -102,7 +102,7 @@ class CustomTextFields extends ConsumerWidget {
         ),
         fillColor: Colors.transparent,
         filled: true,
-        errorStyle: styles.textStyle(
+        errorStyle: styles.body(
           color: Theme.of(context).colorScheme.error,
         ),
         focusedBorder: OutlineInputBorder(
@@ -113,7 +113,7 @@ class CustomTextFields extends ConsumerWidget {
         prefixIconColor: Theme.of(context).colorScheme.secondary,
         suffixIconColor: Theme.of(context).colorScheme.secondary,
         contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-        labelStyle: styles.textStyle(),
+        labelStyle: styles.body(),
         labelText: label,
         hintText: hintText,
         focusColor: Theme.of(context).colorScheme.secondary,
@@ -122,7 +122,7 @@ class CustomTextFields extends ConsumerWidget {
           fontWeight: FontWeight.w500,
         ),
         iconColor: Theme.of(context).colorScheme.secondary,
-        hintStyle: styles.textStyle(
+        hintStyle: styles.body(
             fontWeight: FontWeight.w300, mobile: 13, desktop: 13, tablet: 13),
         prefixIcon: prefixIcon != null
             ? Icon(

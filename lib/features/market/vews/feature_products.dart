@@ -5,6 +5,7 @@ import 'package:firmer_city/features/cart/data/cart_model.dart';
 import 'package:firmer_city/features/cart/provider/cart_provider.dart';
 import 'package:firmer_city/features/market/provider/market_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,10 +23,11 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
   @override
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     var productsStream = ref.watch(productStreamProvider);
     var _cartProvider = ref.watch(cartProvider);
-    var itmes = _cartProvider.items.toList().map((e) => CartItem.fromMap(e)).toList();
+    var itmes =
+        _cartProvider.items.toList().map((e) => CartItem.fromMap(e)).toList();
     var cartNotifier = ref.read(cartProvider.notifier);
     return Container(
         width: double.infinity,
@@ -34,38 +36,73 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  'Featured Products',
-                  style: styles.textStyle(
+            if (!ref.watch(isSearchingProvider) ||
+                breakPoint.largerOrEqualTo(DESKTOP))
+              Row(
+                children: [
+                  Text(
+                    'Featured Products',
+                    style: styles.body(
+                        color: primaryColor,
+                        mobile: 30,
+                        desktop: 36,
+                        tablet: 34,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  if (breakPoint.smallerThan(DESKTOP))
+                    IconButton(
+                      onPressed: () {
+                        ref.read(isSearchingProvider.notifier).state = true;
+                      },
+                      icon: const Icon(Icons.search),
+                      iconSize: 30,
                       color: primaryColor,
-                      mobile: 30,
-                      desktop: 36,
-                      tablet: 34,
-                      fontWeight: FontWeight.bold),
-                ),
-                const Spacer(),
-                if (breakPoint.smallerThan(DESKTOP))
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.search),
-                    iconSize: 30,
-                    color: primaryColor,
-                  )
-                else
-                  SizedBox(
-                    width: breakPoint.screenWidth * 0.4,
+                    )
+                  else
+                    SizedBox(
+                      width: breakPoint.screenWidth * 0.4,
+                      child: CustomTextFields(
+                        hintText: 'Search',
+                        suffixIcon: const Icon(Icons.search),
+                        onChanged: (value) {
+                          ref
+                              .read(productProvider.notifier)
+                              .filterProducts(value);
+                        },
+                      ),
+                    ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            if (ref.watch(isSearchingProvider) &&
+                breakPoint.smallerThan(DESKTOP))
+              Row(
+                children: [
+                  Expanded(
                     child: CustomTextFields(
                       hintText: 'Search',
                       suffixIcon: const Icon(Icons.search),
                       onChanged: (value) {
-                        ref.read(productProvider.notifier).filterProducts(value);
+                        ref
+                            .read(productProvider.notifier)
+                            .filterProducts(value);
                       },
                     ),
-                  )
-              ],
-            ),
+                  ),
+                  //close search
+                  IconButton(
+                    onPressed: () {
+                      ref.read(isSearchingProvider.notifier).state = false;
+                    },
+                    icon: const Icon(Icons.close),
+                    iconSize: 30,
+                    color: primaryColor,
+                  ),
+                ],
+              ),
             const SizedBox(
               height: 10,
             ),
@@ -85,10 +122,12 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: breakPoint.screenWidth < 600
-                      ? 1:breakPoint.screenWidth>=600 && breakPoint.isMobile?2
-                      : breakPoint.isTablet
-                          ? 3
-                          : 4,
+                      ? 1
+                      : breakPoint.screenWidth >= 600 && breakPoint.isMobile
+                          ? 2
+                          : breakPoint.isTablet
+                              ? 3
+                              : 4,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   childAspectRatio: 0.7,
@@ -149,7 +188,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                   product.productName,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: styles.textStyle(
+                                  style: styles.body(
                                       color: Colors.black,
                                       mobile: 16,
                                       desktop: 20,
@@ -163,7 +202,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                   product.productDescription,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: styles.textStyle(
+                                  style: styles.body(
                                       color: Colors.black54,
                                       mobile: 12,
                                       desktop: 12,
@@ -177,7 +216,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                     text: TextSpan(children: [
                                   TextSpan(
                                     text: 'by ',
-                                    style: styles.textStyle(
+                                    style: styles.body(
                                         color: Colors.black54,
                                         mobile: 12,
                                         desktop: 12,
@@ -186,7 +225,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                   ),
                                   TextSpan(
                                     text: product.productOwnerName,
-                                    style: styles.textStyle(
+                                    style: styles.body(
                                         color: Colors.black54,
                                         mobile: 12,
                                         desktop: 12,
@@ -204,7 +243,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                       TextSpan(
                                           text:
                                               '₵${double.parse(product.productPrice).toStringAsFixed(2)}',
-                                          style: styles.textStyle(
+                                          style: styles.body(
                                               color: primaryColor,
                                               mobile: 19,
                                               desktop: 22,
@@ -212,7 +251,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                               fontWeight: FontWeight.bold)),
                                       TextSpan(
                                         text: '/${product.productMeasurement}',
-                                        style: styles.textStyle(
+                                        style: styles.body(
                                             color: primaryColor,
                                             mobile: 12,
                                             desktop: 12,
@@ -232,7 +271,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                                 BorderRadius.circular(5)),
                                         child: Text(
                                           'In stock',
-                                          style: styles.textStyle(
+                                          style: styles.body(
                                               color: Colors.white,
                                               mobile: 12,
                                               desktop: 14,
@@ -250,7 +289,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                                 BorderRadius.circular(5)),
                                         child: Text(
                                           'Out of stock',
-                                          style: styles.textStyle(
+                                          style: styles.body(
                                               color: Colors.white,
                                               mobile: 12,
                                               desktop: 14,
@@ -264,37 +303,51 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                if(itmes.any((element) => element.product['id'] == product.id) == false)
-                                CustomButton(
-                                    text: 'Add to cart',
-                                    color: primaryColor,
-                                    onPressed: () {
-                                      cartNotifier.addToCart(product);
-                                    })else
-                                    Container(
-                                      decoration: BoxDecoration(
+                                if (itmes.any((element) =>
+                                        element.product['id'] == product.id) ==
+                                    false)
+                                  CustomButton(
+                                      text: 'Add to cart',
+                                      color: primaryColor,
+                                      onPressed: () {
+                                        cartNotifier.addToCart(product);
+                                      })
+                                else
+                                  Container(
+                                    decoration: BoxDecoration(
                                         border: Border.all(color: primaryColor),
-                                        borderRadius: BorderRadius.circular(5)
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          CustomButton(text: '',icon: const Icon(Icons.remove),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CustomButton(
+                                          text: '',
+                                          icon: Icons.remove,
                                           color: Colors.red,
-                                          radius: 5,onPressed: (){
-                                            cartNotifier.removeFromCart(product);
-                                          },),
-                                          Text('${
-                                            itmes.where((element) => element.product['id'] == product.id).firstOrNull?.quantity ?? 0
-                                          
-                                          }',style: styles.textStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                                          CustomButton(text: '',icon: const Icon(Icons.add),radius: 5,onPressed: (){
+                                          radius: 5,
+                                          onPressed: () {
+                                            cartNotifier
+                                                .removeFromCart(product);
+                                          },
+                                        ),
+                                        Text(
+                                          '${itmes.where((element) => element.product['id'] == product.id).firstOrNull?.quantity ?? 0}',
+                                          style: styles.body(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        CustomButton(
+                                          text: '',
+                                          icon: Icons.add,
+                                          radius: 5,
+                                          onPressed: () {
                                             cartNotifier.addToCart(product);
-                                          
-                                          },),
-                                        ],
-                                      ),
-                                    )
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  )
                               ],
                             ),
                           )
@@ -323,6 +376,5 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
             }),
           ],
         ));
-    
   }
 }

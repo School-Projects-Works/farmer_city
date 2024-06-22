@@ -1,9 +1,10 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/community/provider/community_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +24,7 @@ class _NewPostState extends ConsumerState<NewPost> {
   Widget build(BuildContext context) {
     var notifier = ref.read(newCommunityProvider.notifier);
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     var user = ref.watch(userProvider);
     return Container(
       padding: const EdgeInsets.only(top: 100, left: 15, right: 15, bottom: 15),
@@ -55,9 +56,8 @@ class _NewPostState extends ConsumerState<NewPost> {
                       //back button
                       IconButton(
                         onPressed: () {
-                          navigateToRoute(
-                              context: context,
-                              route: RouterInfo.communityRoute);
+                           MyRouter(contex: context, ref: ref)
+                              .navigateToRoute( RouterInfo.communityRoute);
                         },
                         icon: const Icon(Icons.close),
                         iconSize: 30,
@@ -67,7 +67,7 @@ class _NewPostState extends ConsumerState<NewPost> {
                         child: Text(
                           'Create a new post',
                           textAlign: TextAlign.center,
-                          style: styles.textStyle(
+                          style: styles.body(
                               fontWeight: FontWeight.bold,
                               mobile: 30,
                               desktop: 36,
@@ -173,10 +173,10 @@ class _NewPostState extends ConsumerState<NewPost> {
                   ),
                   CustomButton(
                     text: 'Submit Post',
-                    icon: Icon(MdiIcons.send),
+                    icon: MdiIcons.send,
                     onPressed: (){
                       if(user.id==null){
-                        navigateToRoute(context: context, route: RouterInfo.loginRoute);
+                       MyRouter(contex: context,ref: ref).navigateToRoute( RouterInfo.loginRoute);
                         return;
                       }
                       if(_formKey.currentState!.validate()){

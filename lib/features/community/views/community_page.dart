@@ -1,11 +1,12 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/core/widget/footer_page.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/community/provider/community_provider.dart';
 import 'package:firmer_city/features/community/provider/switch_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
   Widget build(BuildContext context) {
     var post = ref.watch(postStream);
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     var user = ref.watch(userProvider);
     return Container(
       width: breakPoint.screenWidth,
@@ -54,7 +55,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                           else
                             Text(
                               'Recent Posts',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   fontWeight: FontWeight.bold,
                                   mobile: 30,
                                   desktop: 36,
@@ -84,20 +85,18 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                       CustomButton(
                                           text: 'Ask Community',
                                           color: secondaryColor,
-                                          icon: const Icon(
+                                          icon: 
                                             Icons.add,
-                                            color: Colors.white,
-                                          ),
+                                           
                                           onPressed: () {
                                             if (user.id == null) {
-                                              navigateToRoute(
-                                                  context: context,
-                                                  route: RouterInfo.loginRoute);
+                                               MyRouter(
+                                                      contex: context, ref: ref)
+                                                  .navigateToRoute( RouterInfo.loginRoute);
                                               return;
                                             }
-                                            navigateToRoute(
-                                                context: context,
-                                                route:
+                                            MyRouter(contex: context, ref: ref)
+                                                .navigateToRoute(
                                                     RouterInfo.createPostRoute);
                                           }),
                                     ],
@@ -139,10 +138,9 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                                 .read(isSearching.notifier)
                                                 .state = true;
                                           },
-                                          icon: const Icon(
+                                          icon: 
                                             Icons.search,
-                                            color: Colors.white,
-                                          ),
+                                            
                                           color: primaryColor,
                                         ),
                                         const SizedBox(width: 10),
@@ -151,20 +149,18 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                           radius: 10,
                                           onPressed: () {
                                             if (user.id == null) {
-                                              navigateToRoute(
-                                                  context: context,
-                                                  route: RouterInfo.loginRoute);
+                                               MyRouter(
+                                                      contex: context, ref: ref)
+                                                  .navigateToRoute( RouterInfo.loginRoute);
                                               return;
                                             }
-                                            navigateToRoute(
-                                                context: context,
-                                                route:
+                                            MyRouter(contex: context, ref: ref)
+                                                .navigateToRoute(
                                                     RouterInfo.createPostRoute);
                                           },
-                                          icon: const Icon(
+                                          icon: 
                                             Icons.add,
-                                            color: Colors.white,
-                                          ),
+                                           
                                           color: secondaryColor,
                                         ),
                                       ],

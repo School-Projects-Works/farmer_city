@@ -1,9 +1,9 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
-import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,7 +40,8 @@ class _NavBarState extends ConsumerState<NavBar> {
         children: [
           InkWell(
             onTap: () {
-              navigateToRoute(context: context, route: RouterInfo.homeRoute);
+              MyRouter(contex: context, ref: ref)
+                  .navigateToRoute(RouterInfo.homeRoute);
             },
             child: Image.asset(
               Assets.imagesFarmerLogo,
@@ -54,57 +55,52 @@ class _NavBarState extends ConsumerState<NavBar> {
                 NavItem(
                     title: 'Home',
                     isActive:
-                        ref.watch(navProvider) == RouterInfo.homeRoute.name,
+                        ref.watch(routerProvider) == RouterInfo.homeRoute.name,
                     onTap: () {
-                      ref.read(navProvider.notifier).state =
-                          RouterInfo.homeRoute.name;
-                      navigateToRoute(
-                          context: context, route: RouterInfo.homeRoute);
+                    
+                      MyRouter(contex: context, ref: ref)
+                          .navigateToRoute(RouterInfo.homeRoute);
                     }),
                 const SizedBox(width: 25),
                 NavItem(
                     title: 'Community',
-                    isActive: ref.watch(navProvider) ==
+                    isActive: ref.watch(routerProvider) ==
                         RouterInfo.communityRoute.name,
                     onTap: () {
-                      ref.read(navProvider.notifier).state =
-                          RouterInfo.communityRoute.name;
-                      navigateToRoute(
-                          context: context, route: RouterInfo.communityRoute);
+                      
+                      MyRouter(contex: context, ref: ref)
+                          .navigateToRoute(RouterInfo.communityRoute);
                     }),
                 const SizedBox(width: 25),
                 NavItem(
                     title: 'Market',
-                    isActive:
-                        ref.watch(navProvider) == RouterInfo.marketRoute.name,
+                    isActive: ref.watch(routerProvider) ==
+                        RouterInfo.marketRoute.name,
                     onTap: () {
-                      ref.read(navProvider.notifier).state =
-                          RouterInfo.marketRoute.name;
-                      navigateToRoute(
-                          context: context, route: RouterInfo.marketRoute);
+                      MyRouter(contex: context, ref: ref)
+                          .navigateToRoute(RouterInfo.marketRoute);
                     }),
                 const SizedBox(width: 25),
                 NavItem(
                     title: 'Assistant',
-                    isActive: ref.watch(navProvider) ==
+                    isActive: ref.watch(routerProvider) ==
                         RouterInfo.assistantRoute.name,
                     onTap: () {
-                      ref.read(navProvider.notifier).state =
-                          RouterInfo.assistantRoute.name;
-                      navigateToRoute(
-                          context: context, route: RouterInfo.assistantRoute);
+                     
+                      MyRouter(contex: context, ref: ref)
+                          .navigateToRoute(RouterInfo.assistantRoute);
                     }),
                 const SizedBox(width: 25),
                 if (user.id == null)
                   NavItem(
                       title: 'Login',
-                      isActive:
-                          ref.watch(navProvider) == RouterInfo.loginRoute.name,
+                      isActive: ref.watch(routerProvider) ==
+                          RouterInfo.loginRoute.name,
                       onTap: () {
-                        ref.read(navProvider.notifier).state =
+                        ref.read(routerProvider.notifier).state =
                             RouterInfo.loginRoute.name;
-                        navigateToRoute(
-                            context: context, route: RouterInfo.loginRoute);
+                        MyRouter(contex: context, ref: ref)
+                            .navigateToRoute(RouterInfo.loginRoute);
                       })
                 else
                   PopupMenuButton<String>(
@@ -120,17 +116,21 @@ class _NavBarState extends ConsumerState<NavBar> {
                                   .read(loginProvider.notifier)
                                   .signOut(context: context, ref: ref);
                             });
+                      } else if (value == 'dashboard') {
+                        MyRouter(contex: context, ref: ref)
+                            .navigateToRoute(RouterInfo.dashboardRoute);
                       }
                     },
                     itemBuilder: (context) => [
                       const PopupMenuItem(
                         padding: EdgeInsets.only(right: 130, left: 20),
-                        child: Text('Profile'),
+                        value: 'dashboard',
+                        child: Text('Dashboard'),
                       ),
                       const PopupMenuItem(
                         padding: EdgeInsets.only(right: 130, left: 20),
-                        child: Text('Logout'),
                         value: 'logout',
+                        child: Text('Logout'),
                       ),
                     ],
                     child: CircleAvatar(
@@ -177,15 +177,14 @@ class _NavBarState extends ConsumerState<NavBar> {
                   )
                 else
                   PopupMenuItem(
-                    value: RouterInfo.profileRoute,
+                    value: RouterInfo.dashboardRoute,
                     padding: const EdgeInsets.only(right: 130, left: 20),
-                    child: const Text('Profile'),
+                    child: const Text('Dashboard'),
                   ),
               ],
               icon: const Icon(Icons.menu),
               onSelected: (RouterInfo value) {
-                ref.read(navProvider.notifier).state = value.name;
-                navigateToRoute(context: context, route: value);
+                MyRouter(contex: context, ref: ref).navigateToRoute(value);
               },
             ),
         ],
@@ -211,7 +210,7 @@ class NavItem extends ConsumerStatefulWidget {
 class _NavItemState extends ConsumerState<NavItem> {
   @override
   Widget build(BuildContext context) {
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     return InkWell(
       onTap: widget.onTap,
       child: Container(
@@ -226,7 +225,7 @@ class _NavItemState extends ConsumerState<NavItem> {
         ),
         child: Text(
           widget.title,
-          style: styles.textStyle(
+          style: styles.body(
               color: widget.isActive ? primaryColor : Colors.grey,
               fontWeight: widget.isActive ? FontWeight.bold : FontWeight.w300),
         ),

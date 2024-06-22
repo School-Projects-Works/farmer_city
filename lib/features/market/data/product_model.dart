@@ -175,7 +175,7 @@ class ProductModel {
       createdAt.hashCode;
   }
 
-  static List<ProductModel> dummyProducts(UserModel user) {
+  static List<ProductModel> dummyProduct(UserModel user) {
     try{
     final _faker = Faker();
    

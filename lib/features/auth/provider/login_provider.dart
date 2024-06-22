@@ -1,11 +1,11 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/features/auth/data/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:universal_html/html.dart';
 import '../../../config/router/router_info.dart';
-import '../../../core/functions/navigation.dart';
 import '../../../core/widget/custom_dialog.dart';
 import '../services/auth_services.dart';
 
@@ -51,14 +51,11 @@ class LoginProvider extends StateNotifier<UserModel> {
         CustomDialog.showError(message: 'User not found');
         return;
       }
-
-      var box = Hive.box('user');
-      box.put('id', userData.id);
       state = userData;
       ref.read(userProvider.notifier).setUser(userData);
       CustomDialog.dismiss();
       CustomDialog.showSuccess(message: message);
-       navigateToRoute(context: context, route: RouterInfo.homeRoute); 
+      MyRouter(contex: context, ref: ref).navigateToRoute(RouterInfo.homeRoute);
     } else {
       CustomDialog.dismiss();
       CustomDialog.showError(message: message);
@@ -74,18 +71,24 @@ class LoginProvider extends StateNotifier<UserModel> {
     CustomDialog.showLoading(message: 'Logging out.....');
     var done = await AuthServices.signOut();
     if (done) {
-      var box = Hive.box('user');
-      box.delete('id');
+      Storage localStorage = window.localStorage;
+      localStorage.remove('user');
       ref.read(userProvider.notifier).removeUser();
       CustomDialog.dismiss();
       CustomDialog.showSuccess(message: 'Logged out successfully');
-       // ignore: use_build_context_synchronously
-       navigateToRoute(context: context, route: RouterInfo.loginRoute); 
+      // ignore: use_build_context_synchronously
+      MyRouter(contex: context, ref: ref)
+          .navigateToRoute(RouterInfo.loginRoute);
     }
   }
 }
 
 final userProvider = StateNotifierProvider<UserProvider, UserModel>((ref) {
+  Storage localStorage = window.localStorage;
+  var user = localStorage['user'];
+  if (user != null) {
+    return UserProvider()..updateUer(UserModel.fromJson(user).id);
+  }
   return UserProvider();
 });
 
@@ -93,6 +96,8 @@ class UserProvider extends StateNotifier<UserModel> {
   UserProvider() : super(UserModel());
 
   void setUser(UserModel user) {
+    Storage localStorage = window.localStorage;
+    localStorage['user'] = user.toJson();
     state = user;
   }
 
@@ -104,8 +109,6 @@ class UserProvider extends StateNotifier<UserModel> {
     state = state.copyWith(name: () => value);
   }
 
-
-
   void setGender(String s) {
     state = state.copyWith(
       gender: () => s,
@@ -116,22 +119,21 @@ class UserProvider extends StateNotifier<UserModel> {
     state = state.copyWith(phone: () => value);
   }
 
-
   void updateUser(
       {required WidgetRef ref, required BuildContext context}) async {
     CustomDialog.dismiss();
     CustomDialog.showLoading(message: 'Updating user.....');
     var userProfile = ref.watch(userImage);
-    if(userProfile!=null){
-      var (message, url) = await AuthServices.uploadImage(userProfile, state.id!);
+    if (userProfile != null) {
+      var (message, url) =
+          await AuthServices.uploadImage(userProfile, state.id!);
       if (url != null) {
         state = state.copyWith(profileImage: () => url);
         ref.read(userImage.notifier).state = null;
-      }else{
+      } else {
         CustomDialog.dismiss();
         CustomDialog.showError(message: message);
         return;
-      
       }
     }
     await AuthServices.updateUserData(state);
@@ -139,8 +141,17 @@ class UserProvider extends StateNotifier<UserModel> {
     CustomDialog.showSuccess(message: 'User updated successfully');
   }
 
-  void logout() async{
+  void logout() async {
+    Storage localStorage = window.localStorage;
+    localStorage.remove('user');
     state = UserModel();
+  }
+
+  updateUer(String? id) async {
+    var (message, userData) = await AuthServices.getUserData(id!);
+    if (userData.id != null) {
+      state = userData;
+    }
   }
 }
 

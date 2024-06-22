@@ -1,14 +1,14 @@
+import 'package:firmer_city/config/router/router.dart';
+import 'package:firmer_city/utils/colors.dart';
+import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import '../../../../config/router/router_info.dart';
-import '../../../../core/functions/navigation.dart';
 import '../../../../core/widget/custom_button.dart';
 import '../../../../core/widget/custom_input.dart';
 import '../../../../generated/assets.dart';
-import '../../../../utils/styles.dart';
 import '../../provider/login_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -24,9 +24,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   // final _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     var breakPiont = ResponsiveBreakpoints.of(context);
-    var provider = ref.watch(loginProvider);
     var notifier = ref.read(loginProvider.notifier);
     // _emailController.text = breakPiont.isMobile
     //     ? 'teck.koda@gmail.com'
@@ -114,7 +113,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                               height: 80)),
                                       Text(
                                         'Login ',
-                                        style: styles.textStyle(
+                                        style: styles.body(
                                             color: primaryColor,
                                             mobile: 35,
                                             desktop: 45,
@@ -196,7 +195,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           },
                                           child: Text(
                                             'Forget Password?',
-                                            style: styles.textStyle(
+                                            style: styles.body(
                                                 color: primaryColor,
                                                 mobile: 14,
                                                 desktop: 16,
@@ -226,7 +225,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           children: [
                                             Text(
                                               'Don\'t have an account?',
-                                              style: styles.textStyle(
+                                              style: styles.body(
                                                   color: secondaryColor,
                                                   mobile: 14,
                                                   desktop: 14,
@@ -235,14 +234,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                navigateToRoute(
-                                                    context: context,
-                                                    route: RouterInfo
+                                                MyRouter(
+                                                        contex: context,
+                                                        ref: ref)
+                                                    .navigateToRoute(RouterInfo
                                                         .registerRoute);
                                               },
                                               child: Text(
                                                 'Register',
-                                                style: styles.textStyle(
+                                                style: styles.body(
                                                     color: primaryColor,
                                                     mobile: 14,
                                                     desktop: 14,

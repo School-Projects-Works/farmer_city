@@ -1,11 +1,11 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/features/auth/provider/register_screen_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import '../../../../../core/widget/custom_button.dart';
 import '../../../../../core/widget/custom_selector.dart';
 import '../../../../../utils/styles.dart';
@@ -22,7 +22,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
   @override
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     var provider = ref.watch(newUserProvider);
     var notifier = ref.read(newUserProvider.notifier);
 
@@ -37,8 +37,8 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   if (ref.watch(currentScreenProvider) == 0) {
-                    navigateToRoute(
-                        context: context, route: RouterInfo.loginRoute);
+                   MyRouter(contex: context,ref: ref).navigateToRoute(
+                        RouterInfo.loginRoute);
                   } else {
                     ref.read(currentScreenProvider.notifier).state = 0;
                   }
@@ -48,7 +48,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
               Expanded(
                 child: Text(
                   'New User Registration'.toUpperCase(),
-                  style: styles.textStyle(
+                  style: styles.body(
                       color: primaryColor,
                       mobile: 20,
                       desktop: 30,
@@ -73,7 +73,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text('Which of the following best describes you?',
-                          style: styles.textStyle(
+                          style: styles.body(
                               mobile: 18, desktop: 25, tablet: 20)),
                       subtitle: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -163,7 +163,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text('What is your gender ?',
-                          style: styles.textStyle(
+                          style: styles.body(
                               mobile: 18, desktop: 25, tablet: 20)),
                       subtitle: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -204,7 +204,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                         child: ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('Which of these do you produce?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -263,7 +263,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                           contentPadding: EdgeInsets.zero,
                           title: Text(
                               'Which of these Livestock do you produce?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -321,7 +321,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                         child: ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('Which of these Crops do you produce?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -403,7 +403,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                   icon: const Icon(Icons.arrow_forward_outlined),
                   label: Text(
                     'Continue',
-                    style: styles.textStyle(fontWeight: FontWeight.w800),
+                    style: styles.body(fontWeight: FontWeight.w800),
                   ),
                 )
               else
@@ -415,10 +415,9 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                     text: 'Continue',
                     radius: 10,
                     color: primaryColor,
-                    icon: const Icon(
+                    icon: 
                       Icons.arrow_forward_outlined,
-                      color: Colors.white,
-                    ),
+                      
                   ),
                 ),
             ],

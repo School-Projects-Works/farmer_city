@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firmer_city/features/market/data/product_model.dart';
 
-class MarketServices{
+class MarketServices {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -57,5 +57,14 @@ class MarketServices{
 
   static String getId() {
     return firestore.collection('products').doc().id;
+  }
+
+  static Future<List<ProductModel>> getProductsData() async {
+    try {
+      var data =await firestore.collection('products').get();
+      return data.docs.map((e) => ProductModel.fromMap(e.data())).toList();
+    } catch (e) {
+      return [];
+    }
   }
 }

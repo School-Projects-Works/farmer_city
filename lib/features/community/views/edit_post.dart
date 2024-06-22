@@ -1,14 +1,16 @@
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/community/provider/community_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+
+import '../../../config/router/router.dart';
 
 class EditPost extends ConsumerStatefulWidget {
   const EditPost({super.key, required this.postId});
@@ -24,7 +26,7 @@ class _EditPostState extends ConsumerState<EditPost> {
   Widget build(BuildContext context) {
     var notifier = ref.read(editPostProvider.notifier);
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     var user = ref.watch(userProvider);
     var post = ref.watch(selectedPost(widget.postId));
     //check if widget is done building
@@ -59,9 +61,8 @@ class _EditPostState extends ConsumerState<EditPost> {
                       //back button
                       IconButton(
                         onPressed: () {
-                          navigateToRoute(
-                              context: context,
-                              route: RouterInfo.communityRoute);
+                          MyRouter(contex: context, ref: ref)
+                                    .navigateToRoute( RouterInfo.communityRoute);
                         },
                         icon: const Icon(Icons.close),
                         iconSize: 30,
@@ -71,7 +72,7 @@ class _EditPostState extends ConsumerState<EditPost> {
                         child: Text(
                           'Edit post',
                           textAlign: TextAlign.center,
-                          style: styles.textStyle(
+                          style: styles.body(
                               fontWeight: FontWeight.bold,
                               mobile: 30,
                               desktop: 36,
@@ -132,11 +133,11 @@ class _EditPostState extends ConsumerState<EditPost> {
                   ),
                   CustomButton(
                     text: 'Update Post',
-                    icon: Icon(MdiIcons.update),
+                    icon: MdiIcons.update,
                     onPressed: () {
                       if (user.id == null) {
-                        navigateToRoute(
-                            context: context, route: RouterInfo.loginRoute);
+                         MyRouter(contex: context, ref: ref)
+                                  .navigateToRoute( RouterInfo.loginRoute);
                         return;
                       }
                       if (_formKey.currentState!.validate()) {

@@ -6,6 +6,7 @@ import 'package:firmer_city/features/assistant/provider/actions_provider.dart';
 import 'package:firmer_city/features/assistant/provider/chat_provider.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -199,7 +200,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
 
   Widget _buildInitCards() {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     return breakPoint.screenWidth < 800
         ? Column(
             children: [
@@ -217,7 +218,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                   children: [
                     Text(
                       "Click 'Upload' to select existing images or use your device's camera to snap a new photo of the sick plant.",
-                      style: styles.textStyle(
+                      style: styles.body(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           desktop: 15,
@@ -240,7 +241,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   "The platform analyzes your image to predict the plant disease.",
-                  style: styles.textStyle(
+                  style: styles.body(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       desktop: 15,
@@ -261,7 +262,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   "Type any farm-related question in the chat box to receive expert answers powered by GPT-4.",
-                  style: styles.textStyle(
+                  style: styles.body(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       desktop: 15,
@@ -289,7 +290,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                     Text(
                       "Click 'Upload' to select existing images or use your device's camera to snap a new photo of the sick plant.",
                       textAlign: TextAlign.center,
-                      style: styles.textStyle(
+                      style: styles.body(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           desktop: 15,
@@ -313,7 +314,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                 child: Text(
                   "The platform analyzes your image to predict the plant disease.",
                   textAlign: TextAlign.center,
-                  style: styles.textStyle(
+                  style: styles.body(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       desktop: 15,
@@ -335,7 +336,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                 child: Text(
                   "Type any farm-related question in the chat box to receive expert answers powered by GPT-4.",
                   textAlign: TextAlign.center,
-                  style: styles.textStyle(
+                  style: styles.body(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       desktop: 15,
@@ -364,10 +365,9 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                 onPressed: () {
                   pressNotifier.state = true;
                 },
-                icon: const Icon(
+                icon: 
                   Icons.upload_file,
-                  color: Colors.white,
-                ),
+                  
               ),
             )),
         ResponsiveVisibility(
@@ -395,10 +395,9 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                                     );
                               },
                               radius: 10,
-                              icon: const Icon(
+                              icon:
                                 Icons.upload_file,
-                                color: Colors.white,
-                              ),
+                                
                             ),
                             const SizedBox(
                               width: 5,
@@ -418,10 +417,9 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                                       user: user,
                                     );
                               },
-                              icon: const Icon(
+                              icon: 
                                 Icons.camera,
-                                color: Colors.white,
-                              ),
+                               
                             ),
                             if (pressProvider)
                               const SizedBox(
@@ -432,7 +430,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                                 text: '',
                                 radius: 10,
                                 color: Colors.red,
-                                icon: const Icon(Icons.cancel),
+                                icon:Icons.cancel,
                                 onPressed: () {
                                   pressNotifier.state = false;
                                 },
@@ -460,10 +458,9 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                               );
                         },
                         radius: 10,
-                        icon: const Icon(
+                        icon: 
                           Icons.upload_file,
-                          color: Colors.white,
-                        ),
+                         
                       ),
                       const SizedBox(
                         width: 5,
@@ -483,10 +480,9 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                                 user: user,
                               );
                         },
-                        icon: const Icon(
+                        icon: 
                           Icons.camera,
-                          color: Colors.white,
-                        ),
+                          
                       ),
                       if (pressProvider && breakPoint.isMobile)
                         const SizedBox(
@@ -497,7 +493,7 @@ class _AssitantPageState extends ConsumerState<AssitantPage> {
                           text: '',
                           radius: 10,
                           color: Colors.red,
-                          icon: const Icon(Icons.cancel),
+                          icon: Icons.cancel,
                           onPressed: () {
                             pressNotifier.state = false;
                           },

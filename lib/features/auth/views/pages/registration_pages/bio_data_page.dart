@@ -1,12 +1,12 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/features/auth/provider/register_screen_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
+import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../../../core/widget/custom_button.dart';
 import '../../../../../core/widget/custom_input.dart';
-import '../../../../../utils/styles.dart';
 import '../../../provider/new_user_provider.dart';
 
 class BioDataPage extends ConsumerWidget {
@@ -15,8 +15,7 @@ class BioDataPage extends ConsumerWidget {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var styles = CustomStyles(context: context);
-    var provider = ref.watch(newUserProvider);
+    var styles = Styles(context);
     var notifier = ref.read(newUserProvider.notifier);
 
     return Padding(
@@ -30,8 +29,8 @@ class BioDataPage extends ConsumerWidget {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   if (ref.watch(currentScreenProvider) == 0) {
-                    navigateToRoute(
-                        context: context, route: RouterInfo.loginRoute);
+                   MyRouter(contex:context ,ref: ref).navigateToRoute(
+                        RouterInfo.loginRoute);
                   } else {
                     ref.read(currentScreenProvider.notifier).state = 0;
                   }
@@ -41,7 +40,7 @@ class BioDataPage extends ConsumerWidget {
               Expanded(
                 child: Text(
                   'New User Registration'.toUpperCase(),
-                  style: styles.textStyle(
+                  style: styles.body(
                       color: primaryColor,
                       mobile: 20,
                       desktop: 30,
@@ -68,7 +67,7 @@ class BioDataPage extends ConsumerWidget {
                       ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('What is your Identification No.?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -92,7 +91,7 @@ class BioDataPage extends ConsumerWidget {
                       ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('What is your full name ?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -113,7 +112,7 @@ class BioDataPage extends ConsumerWidget {
                       ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('What is your email address ?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -139,7 +138,7 @@ class BioDataPage extends ConsumerWidget {
                       ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('What is your phone number ?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -163,7 +162,7 @@ class BioDataPage extends ConsumerWidget {
                       ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text('What is your password ?',
-                              style: styles.textStyle(
+                              style: styles.body(
                                   mobile: 18, desktop: 25, tablet: 20)),
                           subtitle: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -204,10 +203,9 @@ class BioDataPage extends ConsumerWidget {
                   text: 'Create Account',
                   radius: 10,
                   color: primaryColor,
-                  icon: const Icon(
+                  icon: 
                     Icons.create,
-                    color: Colors.white,
-                  ),
+                    
                 ),
               ),
             ],

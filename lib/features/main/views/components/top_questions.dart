@@ -1,6 +1,7 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/features/community/provider/community_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,7 @@ class _TopQuestionsState extends ConsumerState<TopQuestions> {
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
     var post = ref.watch(postStream);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     return Container(
       width: breakPoint.screenWidth * 0.3,
       height: breakPoint.screenHeight,
@@ -46,15 +47,15 @@ class _TopQuestionsState extends ConsumerState<TopQuestions> {
                 children: topQuestions
                     .map((e) => ListTile(
                           onTap: () {
-                            navigateToName(
-                                context: context,
-                                route: RouterInfo.postDetailRoute,
-                                parameter: {'id': e.id!});
+                            MyRouter(contex: context, ref: ref).navigateToNamed(
+                                pathParms: {'id': e.id!},
+                                item: RouterInfo.postDetailRoute);
+                            
                           },
                           title: Text(
                             e.title ?? 'No title',
                             maxLines: 2,
-                            style: styles.textStyle(
+                            style: styles.body(
                                 mobile: 15,
                                 desktop: 15,
                                 tablet: 15,

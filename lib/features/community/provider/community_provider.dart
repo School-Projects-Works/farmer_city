@@ -1,15 +1,12 @@
 import 'dart:typed_data';
-
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
-import 'package:firmer_city/features/comments/model/comment_data.dart';
-import 'package:firmer_city/features/comments/services/comment_services.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
 import 'package:firmer_city/features/community/provider/post_provider.dart';
 import 'package:firmer_city/features/community/services/community_services.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -70,7 +67,8 @@ class NewCommunityProvider extends StateNotifier<PostModel> {
     await CommunityServices.savePost(state);
     CustomDialog.dismiss();
     CustomDialog.showToast(message: 'Post created successfully');
-    navigateToRoute(context: context, route: RouterInfo.communityRoute);
+    MyRouter(contex: context, ref: ref)
+        .navigateToRoute(RouterInfo.communityRoute);
   }
 }
 
@@ -104,10 +102,7 @@ class PostImages extends StateNotifier<List<Uint8List>> {
       state = [...state, ...list];
     }
   }
-
-
 }
-
 
 final editPostProvider =
     StateNotifierProvider<EditPostProvider, PostModel>((ref) {
@@ -125,14 +120,13 @@ class EditPostProvider extends StateNotifier<PostModel> {
     state = state.copyWith(description: () => value);
   }
 
-
   void updatePost(
       {required WidgetRef ref, required BuildContext context}) async {
     CustomDialog.showLoading(message: 'Updating post....');
     await CommunityServices.updatePost(state);
     CustomDialog.dismiss();
     CustomDialog.showToast(message: 'Post updated successfully');
-    navigateToRoute(context: context, route: RouterInfo.communityRoute);
+    MyRouter(contex: context,ref: ref).navigateToRoute( RouterInfo.communityRoute);
   }
 
   void setPost(PostModel post) {
@@ -140,9 +134,8 @@ class EditPostProvider extends StateNotifier<PostModel> {
   }
 }
 
-
-final selectedPost =FutureProvider.family<PostModel?,String>((ref,id) async {
- var data = await CommunityServices.getPostById(id);
- ref.read(editPostProvider.notifier).setPost(data!);
+final selectedPost = FutureProvider.family<PostModel?, String>((ref, id) async {
+  var data = await CommunityServices.getPostById(id);
+  ref.read(editPostProvider.notifier).setPost(data!);
   return data;
 });

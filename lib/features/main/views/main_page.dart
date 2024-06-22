@@ -1,15 +1,13 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
 import 'package:firmer_city/features/community/services/community_services.dart';
-import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/features/main/views/components/nav_bar.dart';
-import 'package:firmer_city/features/market/data/product_model.dart';
 import 'package:firmer_city/features/cart/provider/cart_provider.dart';
 import 'package:firmer_city/features/market/services/market_services.dart';
-import 'package:firmer_city/utils/styles.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:badges/badges.dart' as badges;
@@ -17,15 +15,14 @@ import '../../auth/provider/login_provider.dart';
 import '../../auth/services/auth_services.dart';
 
 class MainHomePage extends ConsumerWidget {
-  const MainHomePage({required this.child, this.shellContext, super.key});
+  const MainHomePage({required this.child, super.key});
   final Widget child;
-  final BuildContext? shellContext;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     //check if on homepage or market
-    var showCart = ref.watch(navProvider) == RouterInfo.homeRoute.name ||
-        ref.watch(navProvider) == RouterInfo.marketRoute.name;
+    var showCart = ref.watch(routerProvider) == RouterInfo.homeRoute.name ||
+        ref.watch(routerProvider) == RouterInfo.marketRoute.name;
     var _items = ref.watch(cartProvider).items.toList();
     var items = _items.map((e) => CartItem.fromMap(e)).toList();
     return SafeArea(
@@ -37,8 +34,8 @@ class MainHomePage extends ConsumerWidget {
                 onPressed: () {
                   //todo: navigate to cart
                   if (ref.watch(cartProvider).items.isNotEmpty) {
-                    navigateToRoute(
-                        context: context, route: RouterInfo.cartRoute);
+                    MyRouter(contex: context, ref: ref)
+                        .navigateToRoute(RouterInfo.cartRoute);
                   } else {
                     CustomDialog.showToast(message: 'Cart is empty');
                   }
@@ -86,11 +83,11 @@ class MainHomePage extends ConsumerWidget {
     print('Called =====================');
     await checkLogin(ref);
     var user = ref.watch(userProvider);
-    var data = ProductModel.dummyProducts(user);
-    for (var i = 0; i < 10; i++) {
-      data[i].createdAt = DateTime.now().millisecondsSinceEpoch;
-      data[i].id = MarketServices.getId();
-      await MarketServices.saveProduct(data[i]);
+    // var data = ProductModel.dummyProducts(user);
+    var data = await MarketServices.getProductsData();
+    for (var item in data) {
+      item.productOwnerName = 'Test User';
+      await MarketServices.updateProduct(item);
     }
   }
 

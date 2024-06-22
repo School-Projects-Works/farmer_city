@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/functions/time_functions.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/data/user_model.dart';
@@ -9,12 +9,11 @@ import 'package:firmer_city/features/comments/provider/comments_provider.dart';
 import 'package:firmer_city/features/community/data/community_post_model.dart';
 import 'package:firmer_city/features/community/provider/community_provider.dart';
 import 'package:firmer_city/features/community/provider/post_provider.dart';
-import 'package:firmer_city/features/main/provider/nav_provider.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import '../../../utils/styles.dart';
 
 class PostDetailPage extends ConsumerStatefulWidget {
@@ -72,7 +71,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   final CarouselController pageController = CarouselController();
   final TextEditingController _commentController = TextEditingController();
   Widget _buildPostDetail({required PostModel post, required UserModel user}) {
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     var breakPoint = ResponsiveBreakpoints.of(context);
     var commentsStream = ref.watch(commentsStreamProvider(post.id!));
     return Column(
@@ -155,13 +154,24 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                           },
                         );
                       }).toList(),
+                    )
+                  else
+                    Container(
+                      height: 400,
+                      width: breakPoint.screenWidth,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                      ),
+                      child: const Center(
+                        child: Text('No Image'),
+                      ),
                     ),
                   //title of the post
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       post.title?.toUpperCase() ?? '',
-                      style: styles.textStyle(
+                      style: styles.body(
                           fontWeight: FontWeight.w700,
                           mobile: 22,
                           desktop: 30,
@@ -174,7 +184,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                     child: Text(
                       post.description ?? '',
                       textAlign: TextAlign.justify,
-                      style: styles.textStyle(
+                      style: styles.body(
                           fontWeight: FontWeight.w500,
                           mobile: 16,
                           desktop: 20,
@@ -198,7 +208,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                             const SizedBox(width: 10),
                             Text(
                               post.authorName ?? '',
-                              style: styles.textStyle(
+                              style: styles.body(
                                 fontWeight: FontWeight.w500,
                                 mobile: 14,
                                 desktop: 16,
@@ -213,7 +223,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                         Text(
                             TimeUtils.formatDateTime(post.createdAt!,
                                 onlyDate: true),
-                            style: styles.textStyle(
+                            style: styles.body(
                               fontWeight: FontWeight.w500,
                               mobile: 13,
                               desktop: 14,
@@ -224,13 +234,17 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                         if (breakPoint.largerThan(MOBILE))
                           InkWell(
                             onTap: () {
-                              if(user.id == null){
-                                ref.read(navProvider.notifier).state = RouterInfo.loginRoute.name;
-                                navigateToRoute(context: context, route: RouterInfo.loginRoute);
+                              if (user.id == null) {
+                                ref.read(routerProvider.notifier).state =
+                                    RouterInfo.loginRoute.name;
+                               MyRouter(contex: context,ref: ref).navigateToRoute(
+                                   
+                                   RouterInfo.loginRoute);
                                 return;
                               }
-                              ref.read(postProvider.notifier).likePost(
-                                  post: post, user: user, ref: ref);
+                              ref
+                                  .read(postProvider.notifier)
+                                  .likePost(post: post, user: user, ref: ref);
                             },
                             child: Row(
                               children: [
@@ -246,7 +260,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                 const SizedBox(width: 5),
                                 Text(
                                   post.likes.length.toString(),
-                                  style: styles.textStyle(
+                                  style: styles.body(
                                     fontWeight: FontWeight.w500,
                                     mobile: 14,
                                     desktop: 16,
@@ -297,7 +311,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                     const SizedBox(width: 10),
                                     Text(
                                       comment.writerName,
-                                      style: styles.textStyle(
+                                      style: styles.body(
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ],
@@ -308,7 +322,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                   child: Text(
                                     comment.content,
                                     textAlign: TextAlign.justify,
-                                    style: styles.textStyle(
+                                    style: styles.body(
                                         fontWeight: FontWeight.w300,
                                         height: 1.3),
                                   ),
@@ -354,10 +368,10 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                     icon: const Icon(Icons.send),
                     onPressed: () {
                       if (user.id == null) {
-                        ref.read(navProvider.notifier).state =
+                        ref.read(routerProvider.notifier).state =
                             RouterInfo.loginRoute.name;
-                        navigateToRoute(
-                            context: context, route: RouterInfo.loginRoute);
+                       MyRouter(contex: context,ref: ref). navigateToRoute(
+                            RouterInfo.loginRoute);
                         return;
                       }
                       ref.read(postProvider.notifier).addComment(
@@ -379,7 +393,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   }
 
   Widget _buildSideList({required UserModel user}) {
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     var breakPoint = ResponsiveBreakpoints.of(context);
     var post = ref.watch(postStream);
     return Container(
@@ -392,7 +406,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Related Posts',
-                style: styles.textStyle(
+                style: styles.body(
                     fontWeight: FontWeight.bold,
                     mobile: 30,
                     desktop: 36,
@@ -418,17 +432,17 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                       title: Text(
                         item.title ?? '',
                         maxLines: 1,
-                        style: styles.textStyle(fontWeight: FontWeight.bold),
+                        style: styles.body(fontWeight: FontWeight.bold),
                       ),
                       subtitle: RichText(
                         text: TextSpan(
-                            text: item.description?.substring(0, 150) ?? '',
-                            style: styles.textStyle(
+                            text:item.description!.length>150? item.description?.substring(0, 150) ?? '': item.description,
+                            style: styles.body(
                                 fontWeight: FontWeight.w300, height: 1.3),
                             children: [
                               TextSpan(
                                   text: '....Read More',
-                                  style: styles.textStyle(
+                                  style: styles.body(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold,
                                       desktop: 13,
@@ -436,10 +450,10 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                       tablet: 12),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      navigateToName(
-                                          context: context,
-                                          route: RouterInfo.postDetailRoute,
-                                          parameter: {'id': item.id!});
+                                    MyRouter(contex: context,ref: ref).navigateToNamed(
+                                         
+                                          item: RouterInfo.postDetailRoute,
+                                          pathParms: {'id': item.id!});
                                     })
                             ]),
                       ),

@@ -1,5 +1,5 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
-import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/functions/time_functions.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/comments/provider/comments_provider.dart';
@@ -23,15 +23,14 @@ class _PostItemState extends ConsumerState<PostItem> {
   @override
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     var user = ref.watch(userProvider);
     var commentsStream = ref.watch(commentsStreamProvider(widget.post.id!));
     return InkWell(
       onTap: () {
-        navigateToName(
-            context: context,
-            route: RouterInfo.postDetailRoute,
-            parameter: {'id': widget.post.id ?? ''});
+        MyRouter(contex: context, ref: ref).navigateToNamed(
+            item: RouterInfo.postDetailRoute,
+            pathParms: {'id': widget.post.id ?? ''});
       },
       child: Card(
         child: Container(
@@ -106,10 +105,10 @@ class _PostItemState extends ConsumerState<PostItem> {
                             },
                             onSelected: (value) {
                               if (value == 0) {
-                                navigateToName(
-                                    context: context,
-                                    route: RouterInfo.editPostRoute,
-                                    parameter: {'id': widget.post.id!});
+                                MyRouter(contex: context, ref: ref)
+                                    .navigateToNamed(                                  
+                                    item: RouterInfo.editPostRoute,
+                                    pathParms: {'id': widget.post.id!});
                               } else {
                                 CustomDialog.showInfo(
                                     message:
@@ -174,10 +173,10 @@ class _PostItemState extends ConsumerState<PostItem> {
                               },
                               onSelected: (value) {
                                 if (value == 0) {
-                                  navigateToName(
-                                      context: context,
-                                      route: RouterInfo.editPostRoute,
-                                      parameter: {'id': widget.post.id!});
+                                  MyRouter(contex: context, ref: ref)
+                                      .navigateToNamed(
+                                      item: RouterInfo.editPostRoute,
+                                      pathParms: {'id': widget.post.id!});
                                 } else {
                                   CustomDialog.showInfo(
                                       message:
@@ -213,7 +212,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                   widget.post.title?.toUpperCase() ?? '',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: styles.textStyle(
+                  style: styles.body(
                     fontWeight: FontWeight.w700,
                     mobile: 16,
                     desktop: 20,
@@ -234,7 +233,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                         const SizedBox(width: 10),
                         Text(
                           widget.post.authorName ?? '',
-                          style: styles.textStyle(
+                          style: styles.body(
                             fontWeight: FontWeight.w500,
                             mobile: 14,
                             desktop: 16,
@@ -246,7 +245,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                     Text(
                         TimeUtils.formatDateTime(widget.post.createdAt!,
                             onlyDate: true),
-                        style: styles.textStyle(
+                        style: styles.body(
                           fontWeight: FontWeight.w500,
                           mobile: 13,
                           desktop: 14,
@@ -261,7 +260,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                 child: Text(widget.post.description ?? '',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: styles.textStyle(
+                    style: styles.body(
                       fontWeight: FontWeight.w500,
                       mobile: 14,
                       desktop: 15,
@@ -288,7 +287,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                                   const SizedBox(width: 5),
                                   Text(
                                     'Comments (${comments.length})',
-                                    style: styles.textStyle(
+                                    style: styles.body(
                                       fontWeight: FontWeight.w500,
                                       mobile: 14,
                                       desktop: 16,
@@ -315,7 +314,7 @@ class _PostItemState extends ConsumerState<PostItem> {
                           const SizedBox(width: 5),
                           Text(
                             widget.post.likes.length.toString(),
-                            style: styles.textStyle(
+                            style: styles.body(
                               fontWeight: FontWeight.w500,
                               mobile: 14,
                               desktop: 16,

@@ -1,8 +1,7 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firmer_city/config/router/router.dart';
-import 'package:firmer_city/utils/styles.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,7 +57,7 @@ class MyApp extends ConsumerWidget {
         );
         return widget;
       }),
-      routerConfig: routerConfig(ref),
+      routerConfig: MyRouter(ref: ref, contex: context).router(),
     );
   }
 }

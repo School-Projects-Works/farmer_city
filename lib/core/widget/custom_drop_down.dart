@@ -1,6 +1,6 @@
+import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/styles.dart';
 
 
 class CustomDropDown extends StatelessWidget {
@@ -32,11 +32,11 @@ class CustomDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     return DropdownButtonHideUnderline(
         child: DropdownButtonFormField(
       borderRadius: BorderRadius.circular(5),
-      style: styles.textStyle(
+      style: styles.body(
           fontWeight: FontWeight.bold,
           color: Theme.of(context).textTheme.labelLarge!.color),
       decoration: InputDecoration(
@@ -70,12 +70,12 @@ class CustomDropDown extends StatelessWidget {
               )
             : null,
         contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-        labelStyle: styles.textStyle(),
+        labelStyle: styles.body(),
         labelText: label,
         hintText: hintText,
         focusColor: Theme.of(context).colorScheme.secondary,
         iconColor: Theme.of(context).colorScheme.secondary,
-        hintStyle: styles.textStyle(),
+        hintStyle: styles.body(),
       ),
       onChanged: onChanged,
       onSaved: onSaved,

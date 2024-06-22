@@ -33,7 +33,7 @@ class LandingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     return CarouselSlider(
       options: CarouselOptions(
           height: breakPoint.screenHeight * 0.6,
@@ -72,7 +72,7 @@ class LandingPage extends ConsumerWidget {
                       children: [
                         Text(
                           i['title']!,
-                          style: styles.textStyle(
+                          style: styles.body(
                               color: Colors.white,
                               mobile: 45,
                               desktop: 60,

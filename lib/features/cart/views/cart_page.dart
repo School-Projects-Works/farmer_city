@@ -1,3 +1,4 @@
+import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/functions/navigation.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
@@ -6,9 +7,9 @@ import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/core/widget/footer_page.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
 import 'package:firmer_city/features/cart/provider/order_provider.dart';
-import 'package:firmer_city/features/main/provider/nav_provider.dart';
 import 'package:firmer_city/features/market/data/product_model.dart';
 import 'package:firmer_city/generated/assets.dart';
+import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
@@ -28,7 +29,7 @@ class _CartPageState extends ConsumerState<CartPage> {
   @override
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     var cart = ref.watch(cartProvider);
     return Container(
       width: breakPoint.screenWidth,
@@ -60,14 +61,14 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   Widget buildCartList(CartModel cart) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
           Text(
             'Items in Cart'.toUpperCase(),
-            style: styles.textStyle(
+            style: styles.body(
                 color: primaryColor,
                 fontWeight: FontWeight.bold,
                 desktop: 30,
@@ -83,7 +84,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             Center(
               child: Text(
                 'No Item available in Cart',
-                style: styles.textStyle(desktop: 22, mobile: 17, tablet: 18),
+                style: styles.body(desktop: 22, mobile: 17, tablet: 18),
               ),
             ),
           if (cart.items.isEmpty)
@@ -96,10 +97,10 @@ class _CartPageState extends ConsumerState<CartPage> {
                     color: primaryColor,
                     radius: 10,
                     onPressed: () {
-                      ref.read(navProvider.notifier).state =
+                      ref.read(routerProvider.notifier).state =
                           RouterInfo.marketRoute.name;
-                      navigateToRoute(
-                          context: context, route: RouterInfo.marketRoute);
+                    MyRouter(contex: context,ref: ref).navigateToRoute(
+                          RouterInfo.marketRoute);
                     },
                   )),
             )
@@ -134,7 +135,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                               children: [
                                 Text(product.productName,
                                     maxLines: 2,
-                                    style: styles.textStyle(
+                                    style: styles.body(
                                         fontWeight: FontWeight.bold,
                                         desktop: 20,
                                         tablet: 18,
@@ -143,13 +144,13 @@ class _CartPageState extends ConsumerState<CartPage> {
                                 Text(
                                   product.productDescription,
                                   maxLines: 2,
-                                  style: styles.textStyle(
+                                  style: styles.body(
                                     color: Colors.grey,
                                   ),
                                 ),
                                 Text(
                                     'GH₵${double.parse(product.productPrice).toStringAsFixed(2)}',
-                                    style: styles.textStyle(
+                                    style: styles.body(
                                       fontWeight: FontWeight.bold,
                                       color: primaryColor,
                                       desktop: 22,
@@ -173,7 +174,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   }),
                               Text(
                                 '${cartItem.quantity}',
-                                style: styles.textStyle(),
+                                style: styles.body(),
                               ),
                               IconButton(
                                   icon: const Icon(Icons.remove),
@@ -198,7 +199,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   Widget builTotalSide(CartModel cart) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     return SizedBox(
       width: breakPoint.smallerThan(TABLET)
           ? breakPoint.screenWidth
@@ -208,14 +209,14 @@ class _CartPageState extends ConsumerState<CartPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('SutTotal',
-                style: styles.textStyle(
+                style: styles.body(
                     fontWeight: FontWeight.bold,
                     desktop: 25,
                     tablet: 20,
                     mobile: 18)),
             const SizedBox(height: 10),
             Text('GH₵${cart.totalPrice.toStringAsFixed(2)}',
-                style: styles.textStyle(
+                style: styles.body(
                     fontWeight: FontWeight.bold,
                     color: primaryColor,
                     desktop: 25,
@@ -225,7 +226,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             //payment
             const Divider(),
             Text('Select Payment Method',
-                style: styles.textStyle(
+                style: styles.body(
                     fontWeight: FontWeight.w500,
                     desktop: 18,
                     tablet: 17,
@@ -281,7 +282,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   Widget buildMobile(CartModel cart) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     return const Column(
       children: [],
     );
@@ -289,13 +290,13 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   Widget buildMomoPayment() {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles( context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Select  Provider',
-          style: styles.textStyle(desktop: 17, tablet: 16, mobile: 15),
+          style: styles.body(desktop: 17, tablet: 16, mobile: 15),
         ),
         const SizedBox(
           height: 10,
@@ -332,7 +333,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   Widget momoItem(String title, String value, bool isSelected) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = CustomStyles(context: context);
+    var styles = Styles(context);
     return InkWell(
       onTap: () {
         ref.read(momoProvider.notifier).state = value;
@@ -367,7 +368,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             ),
             Text(
               title,
-              style: styles.textStyle(desktop: 17, tablet: 16, mobile: 15),
+              style: styles.body(desktop: 17, tablet: 16, mobile: 15),
             ),
           ],
         ),

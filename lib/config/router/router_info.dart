@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 
 class RouterInfo {
   String name;
@@ -24,11 +24,49 @@ class RouterInfo {
   static RouterInfo postDetailRoute =
       RouterInfo(name: 'post-detail', path: '/post-detail/:id');
 
-      static RouterInfo createPostRoute = RouterInfo(name: 'create-post', path: '/create-post');
-      static RouterInfo editPostRoute = RouterInfo(name: 'edit-post', path: '/edit-post/:id');
+  static RouterInfo createPostRoute =
+      RouterInfo(name: 'create-post', path: '/create-post');
+  static RouterInfo editPostRoute =
+      RouterInfo(name: 'edit-post', path: '/edit-post/:id');
+
+  static RouterInfo cartRoute = RouterInfo(name: 'cart', path: '/cart');
+
+  static RouterInfo productDetailRoute =
+      RouterInfo(name: 'product-detail', path: '/product-detail/:id');
+  // dashboard
+  static RouterInfo dashboardRoute =
+      RouterInfo(name: 'dashboard', path: '/dashboard');
+  //product
+  static RouterInfo productRoute =
+      RouterInfo(name: 'product', path: '/product');
+  //orders
+  static RouterInfo ordersRoute = RouterInfo(name: 'orders', path: '/orders');
 
 
-      static RouterInfo cartRoute = RouterInfo(name: 'cart', path: '/cart');
 
 
+
+      static List<RouterInfo> get allRoutes => [
+        homeRoute,
+        loginRoute,
+        registerRoute,
+        profileRoute,
+       
+        dashboardRoute,
+        productRoute,
+        ordersRoute,
+        communityRoute,
+        marketRoute,
+        assistantRoute,
+        postDetailRoute,
+        createPostRoute,
+        editPostRoute,
+        cartRoute,
+        productDetailRoute,
+
+      ];
+
+  static RouterInfo getRouteByPath(String fullPath) {
+    return allRoutes.firstWhere((element) => element.path == fullPath);
+  }
 }

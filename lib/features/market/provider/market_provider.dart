@@ -58,3 +58,6 @@ class ProductProvider extends StateNotifier<FilteredProducts> {
   }
 
 }
+
+
+final isSearchingProvider = StateProvider<bool>((ref) => false);

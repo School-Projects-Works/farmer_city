@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/firmer_city.iml" filepath="$PROJECT_DIR$/firmer_city.iml" />
+      <module fileurl="file://$PROJECT_DIR$/farmer_city.iml" filepath="$PROJECT_DIR$/farmer_city.iml" />
       <module fileurl="file://$PROJECT_DIR$/android/firmer_city_android.iml" filepath="$PROJECT_DIR$/android/firmer_city_android.iml" />
     </modules>
   </component>
