@@ -42,6 +42,9 @@ class RouterInfo {
   //orders
   static RouterInfo ordersRoute = RouterInfo(name: 'orders', path: '/orders');
 
+  static RouterInfo newProductRoute = RouterInfo(name: 'new-product', path: '/new-product');
+  static RouterInfo editProductRoute = RouterInfo(name: 'edit-product', path: '/edit-product/:id');
+
 
 
 

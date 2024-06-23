@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_credit_card/src/models/credit_card_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final selectedPaymentProvider = StateProvider<String>(
@@ -7,12 +6,41 @@ final selectedPaymentProvider = StateProvider<String>(
     return 'Payment on Delivery';
   },
 );
-
-final momoProvider = StateProvider<String?>(
+class MomoPayment {
+  String? phoneNumber;
+  String? network;
+  MomoPayment({this.phoneNumber, this.network});
+  MomoPayment copyWith({
+    ValueGetter<String?>? phoneNumber,
+    ValueGetter<String?>? network,
+  }) {
+    return MomoPayment(
+      phoneNumber: phoneNumber != null ? phoneNumber() : this.phoneNumber,
+      network: network != null ? network() : this.network,
+    );
+  }
+}
+final momoProvider = StateNotifierProvider<MomoPaymentProvider, MomoPayment>(
   (ref) {
-    return null;
+    return MomoPaymentProvider();
   },
 );
+
+class MomoPaymentProvider extends StateNotifier<MomoPayment> {
+  MomoPaymentProvider() : super(MomoPayment());
+
+  void setProvider(String value) {
+    state = state.copyWith(phoneNumber:()=> value);
+  }
+
+  void setPhone(String value) {
+    state = state.copyWith(phoneNumber:()=> value);
+  }
+
+  void clear() {
+    state = state.copyWith(phoneNumber:()=> null, network:()=> null);
+  }
+}
 
 class CardDetails {
   String? cardNumber;
@@ -53,5 +81,28 @@ final cardDetailsProvider =
 class CardDetailsProvider extends StateNotifier<CardDetails> {
   CardDetailsProvider() : super(CardDetails());
 
-  void setCardDetails(CreditCardModel creditCardModel) {}
+  void setCardHolderName(String? name) {
+    state = state.copyWith(cardHolderName: () => name);
+  }
+
+  void setCvvCode(String? cvv) {
+    state = state.copyWith(cvvCode: () => cvv);
+  }
+
+  void setExpiryDate(String? date) {
+    state = state.copyWith(expiryDate: () => date);
+  }
+
+  void setCardNumber(String? card) {
+    state = state.copyWith(cardNumber: () => card);
+  }
+
+  void clear() {
+    state = state.copyWith(
+        cardHolderName: () => null,
+        cardNumber: () => null,
+        cvvCode: () => null,
+        expiryDate: () => null);
+  }
+
 }

@@ -1,14 +1,21 @@
 import 'package:firmer_city/config/router/router_info.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/assistant/view/assistant_page.dart';
+import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/views/cart_page.dart';
 import 'package:firmer_city/features/community/views/edit_post.dart';
 import 'package:firmer_city/features/community/views/new_post.dart';
 import 'package:firmer_city/features/dashboard/views/dashboard.dart';
 import 'package:firmer_city/features/dashboard/views/main_container.dart';
+import 'package:firmer_city/features/dashboard/views/orders_page.dart';
+import 'package:firmer_city/features/dashboard/views/products/edit_product.dart';
+import 'package:firmer_city/features/dashboard/views/products/new_products.dart';
+import 'package:firmer_city/features/dashboard/views/products/product_main.dart';
+import 'package:firmer_city/features/dashboard/views/products/products_page.dart';
+import 'package:firmer_city/features/dashboard/views/profile_page.dart';
 import 'package:firmer_city/features/main/views/home_page.dart';
 import 'package:firmer_city/features/main/views/main_page.dart';
 import 'package:firmer_city/features/market/vews/market_page.dart';
-import 'package:firmer_city/features/profile/views/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -57,10 +64,6 @@ class MyRouter {
                       path: RouterInfo.homeRoute.path,
                       name: RouterInfo.homeRoute.name,
                       builder: (context, state) => const HomePage()),
-                  GoRoute(
-                      path: RouterInfo.profileRoute.path,
-                      name: RouterInfo.profileRoute.name,
-                      builder: (context, state) => const ProfilePage()),
                   GoRoute(
                       path: RouterInfo.communityRoute.path,
                       name: RouterInfo.communityRoute.name,
@@ -114,6 +117,14 @@ class MyRouter {
                     child: child,
                   );
                 },
+                redirect: (context, state) {
+                  var userInfo = ref.watch(userProvider);
+                  if (userInfo.id == null) {
+                    CustomDialog.showToast(message: 'Please login to continue');
+                    return RouterInfo.homeRoute.path;
+                  }
+                  return null;
+                },
                 routes: [
                   GoRoute(
                       path: RouterInfo.dashboardRoute.path,
@@ -121,6 +132,54 @@ class MyRouter {
                       builder: (context, state) {
                         return const DashBoard();
                       }),
+                  GoRoute(
+                      path: RouterInfo.ordersRoute.path,
+                      name: RouterInfo.ordersRoute.name,
+                      builder: (context, state) {
+                        return const OrdersPage();
+                      }),
+                  GoRoute(
+                      path: RouterInfo.profileRoute.path,
+                      name: RouterInfo.profileRoute.name,
+                      builder: (context, state) {
+                        return const ProfilePage();
+                      }),
+                  ShellRoute(
+                      builder: (context, state, child) {
+                        return ProductsMainPage(
+                          child,
+                        );
+                      },
+                      routes: [
+                        GoRoute(
+                            path: RouterInfo.productRoute.path,
+                            name: RouterInfo.productRoute.name,
+                            builder: (context, state) {
+                              return const ProductsPage();
+                            }),
+                        GoRoute(
+                            path: RouterInfo.productDetailRoute.path,
+                            name: RouterInfo.productDetailRoute.name,
+                            builder: (context, state) {
+                              final productId = state.pathParameters['id'];
+                              return Container(
+                                  // productId: productId!,
+                                  );
+                            }),
+                        GoRoute(
+                            path: RouterInfo.newProductRoute.path,
+                            name: RouterInfo.newProductRoute.name,
+                            builder: (context, state) {
+                              return const NewProducts();
+                            }),
+                            //edit product
+                            GoRoute(path: RouterInfo.editProductRoute.path, name: RouterInfo.editProductRoute.name, builder: (context, state) {
+                              final productId = state.pathParameters['id'];
+                              return EditProduct(
+                                id: productId!,
+                              );
+                            }),
+                      ])
                 ])
           ]);
 

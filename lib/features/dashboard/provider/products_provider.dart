@@ -1,12 +1,16 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
+import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/market/data/product_model.dart';
 import 'package:firmer_city/features/market/services/market_services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final productStreamProvider =
+final dashboardProductStreamProvider =
     StreamProvider.autoDispose<List<ProductModel>>((ref) async* {
-  var products = MarketServices.getProducts();
+  var farmerId = ref.watch(userProvider).id;
+  if (farmerId == null) return;
+  var products = MarketServices.getProductsByFarmer(farmerId);
   await for (var product in products) {
-    ref.read(productProvider.notifier).setProducts(product);
+    ref.read(dashboardProductProvider.notifier).setProducts(product);
     yield product;
   }
 });
@@ -30,13 +34,13 @@ class FilteredProducts {
   }
 }
 
-final productProvider =
-    StateNotifierProvider<ProductProvider, FilteredProducts>((ref) {
-  return ProductProvider();
+final dashboardProductProvider =
+    StateNotifierProvider<DashboardProductProvider, FilteredProducts>((ref) {
+  return DashboardProductProvider();
 });
 
-class ProductProvider extends StateNotifier<FilteredProducts> {
-  ProductProvider()
+class DashboardProductProvider extends StateNotifier<FilteredProducts> {
+  DashboardProductProvider()
       : super(FilteredProducts(products: [], filteredProducts: []));
   void setProducts(List<ProductModel> products) {
     state = state.copyWith(products: products, filteredProducts: products);
@@ -59,6 +63,20 @@ class ProductProvider extends StateNotifier<FilteredProducts> {
       state = state.copyWith(filteredProducts: filtered);
     }
   }
-}
 
-final isSearchingProvider = StateProvider<bool>((ref) => false);
+  void deleteProduct(String id) async {
+    CustomDialog.dismiss();
+    CustomDialog.showLoading(message: 'Deleting product...');
+    var res = await MarketServices.deleteProduct(id);
+    if (res) {
+      var products = state.products;
+      products.removeWhere((element) => element.id == id);
+      state = state.copyWith(products: products, filteredProducts: products);
+      CustomDialog.dismiss();
+      CustomDialog.showToast(message: 'Product deleted');
+    } else {
+      CustomDialog.dismiss();
+      CustomDialog.showError(message: 'Failed to delete product');
+    }
+  }
+}

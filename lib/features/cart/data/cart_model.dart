@@ -1,8 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-
-import 'package:firmer_city/features/market/data/product_model.dart';
 
 class CartModel {
   String id;

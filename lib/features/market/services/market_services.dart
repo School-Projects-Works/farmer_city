@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firmer_city/features/market/data/product_model.dart';
@@ -61,8 +63,36 @@ class MarketServices {
 
   static Future<List<ProductModel>> getProductsData() async {
     try {
-      var data =await firestore.collection('products').get();
+      var data = await firestore.collection('products').get();
       return data.docs.map((e) => ProductModel.fromMap(e.data())).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Stream<List<ProductModel>> getProductsByFarmer(String farmerId) {
+    return firestore
+        .collection('products')
+        .where('productOwnerId', isEqualTo: farmerId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ProductModel.fromMap(doc.data()))
+            .toList());
+  }
+
+  static Future<List<String>> uploadImages(List<Uint8List> watch) async {
+    try {
+      var storage = FirebaseStorage.instance;
+      List<String> urls = [];
+      for (var item in watch) {
+        var ref = storage
+            .ref()
+            .child('images/${DateTime.now().millisecondsSinceEpoch}');
+        await ref.putData(item);
+        var url = await ref.getDownloadURL();
+        urls.add(url);
+      }
+      return urls;
     } catch (e) {
       return [];
     }

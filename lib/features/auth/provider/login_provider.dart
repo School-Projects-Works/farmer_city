@@ -75,7 +75,7 @@ class LoginProvider extends StateNotifier<UserModel> {
       localStorage.remove('user');
       ref.read(userProvider.notifier).removeUser();
       CustomDialog.dismiss();
-      CustomDialog.showSuccess(message: 'Logged out successfully');
+      CustomDialog.showToast(message: 'Logged out successfully');
       // ignore: use_build_context_synchronously
       MyRouter(contex: context, ref: ref)
           .navigateToRoute(RouterInfo.loginRoute);
@@ -139,12 +139,6 @@ class UserProvider extends StateNotifier<UserModel> {
     await AuthServices.updateUserData(state);
     CustomDialog.dismiss();
     CustomDialog.showSuccess(message: 'User updated successfully');
-  }
-
-  void logout() async {
-    Storage localStorage = window.localStorage;
-    localStorage.remove('user');
-    state = UserModel();
   }
 
   updateUer(String? id) async {

@@ -39,8 +39,9 @@ dependencies:
   flutter_markdown: ^0.7.1
   cached_network_image: ^3.3.1
   badges: ^3.1.2
-  flutter_credit_card: ^4.0.1
   universal_html: ^2.2.4
+  data_table_2: ^2.5.15
+  collection: ^1.18.0
 
 
 dev_dependencies:

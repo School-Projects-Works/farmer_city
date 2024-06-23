@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
+import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
 import 'package:firmer_city/features/cart/provider/cart_provider.dart';
 import 'package:firmer_city/features/market/provider/market_provider.dart';
@@ -12,7 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class FeaturedProducts extends ConsumerStatefulWidget {
-  const FeaturedProducts({super.key});
+  const FeaturedProducts( {super.key,this.quantity=8});
+  final int quantity;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -29,6 +32,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
     var itmes =
         _cartProvider.items.toList().map((e) => CartItem.fromMap(e)).toList();
     var cartNotifier = ref.read(cartProvider.notifier);
+    var user = ref.watch(userProvider);
     return Container(
         width: double.infinity,
         padding:
@@ -133,8 +137,8 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                   childAspectRatio: 0.7,
                 ),
                 itemCount: products.length > 8
-                    ? products.sublist(0, 8).length
-                    : products.length,
+                    ? widget.quantity!=0?products.sublist(0, widget.quantity).length
+                    : products.length:products.length,
                 itemBuilder: (context, index) {
                   var product = products[index];
                   return InkWell(
@@ -310,6 +314,14 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                       text: 'Add to cart',
                                       color: primaryColor,
                                       onPressed: () {
+                                        if (user.id != null &&
+                                            user.id == product.productOwnerId) {
+                                          CustomDialog.showToast(
+                                              message:
+                                                  'You can not add your own product to cart');
+                                          return;
+                                        }
+
                                         cartNotifier.addToCart(product);
                                       })
                                 else

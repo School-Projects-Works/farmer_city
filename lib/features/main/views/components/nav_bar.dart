@@ -134,13 +134,20 @@ class _NavBarState extends ConsumerState<NavBar> {
                       ),
                     ],
                     child: CircleAvatar(
-                        radius: 20,
-                        backgroundImage: user.profileImage != null
-                            ? NetworkImage(user.profileImage!)
-                            : null,
-                        child: user.profileImage == null
-                            ? const Icon(Icons.person)
-                            : null),
+                      backgroundColor: secondaryColor,
+                      backgroundImage: () {
+                        var user = ref.watch(userProvider);
+                        if (user.profileImage == null) {
+                          return AssetImage(
+                            user.gender == 'Male'
+                                ? Assets.imagesMale
+                                : Assets.imagesFemale,
+                          );
+                        } else {
+                          NetworkImage(user.profileImage!);
+                        }
+                      }(),
+                    ),
                   ),
               ],
             ),

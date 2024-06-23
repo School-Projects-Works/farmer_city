@@ -80,13 +80,13 @@ class MainHomePage extends ConsumerWidget {
   }
 
   Future<void> saveDummyProducts(WidgetRef ref) async {
-    print('Called =====================');
     await checkLogin(ref);
     var user = ref.watch(userProvider);
     // var data = ProductModel.dummyProducts(user);
     var data = await MarketServices.getProductsData();
-    for (var item in data) {
+    for (var item in data.sublist(0, 10)) {
       item.productOwnerName = 'Test User';
+      item.productOwnerId = item.id;
       await MarketServices.updateProduct(item);
     }
   }

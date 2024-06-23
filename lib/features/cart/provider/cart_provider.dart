@@ -1,7 +1,16 @@
+import 'package:firmer_city/config/router/router.dart';
+import 'package:firmer_city/config/router/router_info.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
+import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
+import 'package:firmer_city/features/cart/provider/order_provider.dart';
+import 'package:firmer_city/features/dashboard/data/oder_model.dart';
+import 'package:firmer_city/features/dashboard/services/order_services.dart';
 import 'package:firmer_city/features/market/data/product_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:collection/collection.dart';
 
 final cartProvider = StateNotifierProvider<CartProvider, CartModel>(
   (ref) {
@@ -106,6 +115,79 @@ class CartProvider extends StateNotifier<CartModel> {
   }
 
   void clearCart() {
-    state = state.copyWith(items: []);
+    state = state.copyWith(items: [], totalPrice: 0);
+  }
+
+  void placeOrder(
+      {required WidgetRef ref, required BuildContext context}) async {
+    CustomDialog.showLoading(
+      message: 'Placing order...',
+    );
+    var paymentMethod = ref.read(selectedPaymentProvider);
+    var user = ref.read(userProvider);
+    Map<String, dynamic> paymentDetails = {};
+    if (paymentMethod.contains('Momo')) {
+      var momo = ref.read(momoProvider);
+      paymentDetails = {
+        'method': 'Momo',
+        'phoneNumber': momo.phoneNumber,
+        'network': momo.network
+      };
+    } else if (paymentMethod.contains('Card')) {
+      var card = ref.read(cardDetailsProvider);
+      paymentDetails = {
+        'method': 'Card',
+        'cardNumber': card.cardNumber,
+        'expiryDate': card.expiryDate,
+        'cardHolderName': card.cardHolderName,
+        'cvvCode': card.cvvCode
+      };
+    } else {
+      paymentDetails = {
+        'method': 'Cash',
+      };
+    }
+    var address = ref.read(addressProvider);
+    var items =
+        ref.read(cartProvider).items.map((e) => CartItem.fromMap(e)).toList();
+    var products = items.map((e) => ProductModel.fromMap(e.product)).toList();
+    //group items by farmer
+    var groupedItems =
+        groupBy(products, (ProductModel obj) => obj.productOwnerId);
+        List<String> ids =[user.id!, ...groupedItems.keys].toList();
+    var order = OrderModel(
+        id: OrderServices.generateOrderId(),
+        totalPrice: state.totalPrice,
+        items: state.items,
+        status: 'Pending',
+        buyerId: user.id!,
+        buyerName: user.name!,
+        buyerPhone: user.phone!,
+        buyerAddress: address,
+        farmerId: ids,
+        paymentDetails: paymentDetails,
+        deliveryDetails: {
+          'address': address,
+        },
+        createdAt: DateTime.now().millisecondsSinceEpoch);
+    var res = await OrderServices.createOrder(order);
+    if (res) {
+      CustomDialog.dismiss();
+      CustomDialog.showSuccess(
+        message: 'Order placed successfully',
+      );
+      ref.read(cartProvider.notifier).clearCart();
+      //clear payments
+      ref.read(momoProvider.notifier).clear();
+      ref.read(cardDetailsProvider.notifier).clear();
+      MyRouter(contex: context, ref: ref).navigateToRoute(RouterInfo.homeRoute);
+    } else {
+      CustomDialog.dismiss();
+      CustomDialog.showError(
+        message: 'Failed to place order',
+      );
+    }
   }
 }
+
+final addressProvider = StateProvider<String>((ref) => '');

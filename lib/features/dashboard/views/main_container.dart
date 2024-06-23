@@ -4,6 +4,8 @@ import 'package:firmer_city/core/widget/app_bar_item.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/dashboard/components/side_bar.dart';
+import 'package:firmer_city/features/dashboard/provider/orders_provider.dart';
+import 'package:firmer_city/features/dashboard/provider/products_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
 import 'package:firmer_city/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,8 @@ class MainContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var breakPoint = ResponsiveBreakpoints.of(context);
+    var ordersStream = ref.watch(orderStreamProvider);
+    var productsStream = ref.watch(dashboardProductStreamProvider);
    return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -73,8 +77,8 @@ class MainContainer extends ConsumerWidget {
                                 buttonText: 'Logout',
                                 onPressed: () {
                                   ref
-                                      .read(userProvider.notifier)
-                                      .logout();
+                                      .read(loginProvider.notifier)
+                                      .signOut(context: context, ref: ref);
                                   Navigator.of(context).pop();
                                 },
                               );
@@ -175,33 +179,11 @@ class MainContainer extends ConsumerWidget {
                         child: Container(
                             color: Colors.grey[100],
                             padding: const EdgeInsets.all(10),
-                            child: patientStream.when(
-                                data: (data) {
-                                  return doctorsStream.when(
-                                      data: (doctors) {
-                                        return appointmentStream.when(
-                                            data: (appointments) {
-                                              return reviewsStream.when(
-                                                  data: (reviews) {
-                                                    return child;
-                                                  },
-                                                  error: (error, stack) {
-                                                    return Center(
-                                                        child: Text(
-                                                            error.toString()));
-                                                  },
-                                                  loading: () => const Center(
-                                                      child:
-                                                          CircularProgressIndicator()));
-                                            },
-                                            error: (error, stack) {
-                                              return Center(
-                                                  child:
-                                                      Text(error.toString()));
-                                            },
-                                            loading: () => const Center(
-                                                child:
-                                                    CircularProgressIndicator()));
+                            child: productsStream.when(
+                                data: (products) {
+                                  return ordersStream.when(
+                                      data: (orders) {
+                                        return child;
                                       },
                                       error: (error, stack) {
                                         return Center(

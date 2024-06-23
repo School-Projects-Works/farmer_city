@@ -24,7 +24,7 @@ class _MarketPageState extends ConsumerState<MarketPage> {
               const SizedBox(
                 height: 20,
               ),
-              const FeaturedProducts(),
+              const FeaturedProducts(quantity: 0,),
               const SizedBox(
                 height: 20,
               ),
