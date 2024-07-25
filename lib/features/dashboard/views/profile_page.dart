@@ -19,10 +19,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     var styles = Styles(context);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             width: styles.isMobile
                 ? double.infinity
                 : styles.isTablet
