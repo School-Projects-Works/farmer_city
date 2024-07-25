@@ -2,28 +2,19 @@
 class Assets {
   Assets._();
 
-  static const String fontsOpenSansBold = 'assets/fonts/OpenSans-Bold.ttf';
-  static const String fontsOpenSansLight = 'assets/fonts/OpenSans-Light.ttf';
-  static const String fontsOpenSansMedium = 'assets/fonts/OpenSans-Medium.ttf';
-  static const String fontsOpenSansRegular = 'assets/fonts/OpenSans-Regular.ttf';
-  static const String fontsRalewayBold = 'assets/fonts/Raleway-Bold.ttf';
-  static const String fontsRalewayLight = 'assets/fonts/Raleway-Light.ttf';
-  static const String fontsRalewayMedium = 'assets/fonts/Raleway-Medium.ttf';
-  static const String fontsRalewayRegular = 'assets/fonts/Raleway-Regular.ttf';
+
   static const String imagesAt = 'assets/images/at.png';
-  static const String imagesFarmerIcon = 'assets/images/farmer_icon.png';
-  static const String imagesFarmerLogo = 'assets/images/farmer_logo.png';
+  static const String imagesFarmerIcon = 'assets/images/icon.png';
+  static const String imagesFarmerLogo = 'assets/images/logo_h.png';
   static const String imagesFarmerSplash = 'assets/images/farmer_splash.png';
   static const String imagesFemale = 'assets/images/female.jpg';
-  static const String imagesFormerLight = 'assets/images/former_light.png';
+  static const String imagesFormerLight = 'assets/images/logo_light.png';
   static const String imagesMale = 'assets/images/male.png';
   static const String imagesMtn = 'assets/images/mtn.jpg';
   static const String imagesTelecel = 'assets/images/telecel.jpg';
-  static const String slideSlide2 = 'assets/slide/slide_2.jpg';
-  static const String slideSlide3 = 'assets/slide/slide_3.jpg';
-  static const String slideSlideOne = 'assets/slide/slide_one.jpg';
-  static const String slideSlideThree = 'assets/slide/slide_three.jpg';
-  static const String slideSlideTwo = 'assets/slide/slide_two.jpg';
+  static const String slideSlideOne = 'assets/slide/slide_1.jpg';
+  static const String slideSlideThree = 'assets/slide/slide_2.jpeg';
+  static const String slideSlideTwo = 'assets/slide/slide_4.jpg';
   static const String slideSlidw1 = 'assets/slide/slidw_1.avif';
 
 }

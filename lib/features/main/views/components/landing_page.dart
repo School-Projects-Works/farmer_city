@@ -12,13 +12,13 @@ class LandingPage extends ConsumerWidget {
 
   List<Map<String, String>> data = [
     {
-      'image': Assets.slideSlide2,
-      'title': 'Welcome to Farmer City',
+      'image': Assets.slideSlideOne,
+      'title': 'Welcome to The Agric Hub',
       'description':
           'This is a platform for farmers to connect and share ideas, knowledge and sell their products'
     },
     {
-      'image': Assets.slideSlide3,
+      'image': Assets.slideSlideThree,
       'title': 'A. I Assistant for Farmers',
       'description':
           'Use our A. I assistant to help you with your farming activities and get the best results. From plant disease detection to weather forecast, we got you covered.'

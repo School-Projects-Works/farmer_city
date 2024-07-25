@@ -75,9 +75,9 @@ flutter:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/farmer_splash.png
+  image: assets/images/solash.png
   android_12:
-    image: assets/images/farmer_splash.png
+    image: assets/images/solash.png
   web: false
 
   # dart run flutter_native_splash:create
@@ -85,7 +85,7 @@ flutter_native_splash:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/farmer_icon.png"
+  image_path: "assets/images/icon.png"
   min_sdk_android: 21
   adaptive_icon_background: "#ffffff"
 
