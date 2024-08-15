@@ -9,6 +9,9 @@ import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:location/location.dart';
+
+import '../../../../core/constant/constant_strings.dart';
 
 class NewProducts extends ConsumerStatefulWidget {
   const NewProducts({super.key});
@@ -19,10 +22,13 @@ class NewProducts extends ConsumerStatefulWidget {
 
 class _NewProductsState extends ConsumerState<NewProducts> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var latController = TextEditingController();
+  var longController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var styles = Styles(context);
     var notifier = ref.read(newProductProvider.notifier);
+    var addressNotifier = ref.read(productAddProvider.notifier);
 
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -39,7 +45,7 @@ class _NewProductsState extends ConsumerState<NewProducts> {
                   //close
                   IconButton(
                       onPressed: () {
-                        MyRouter(contex: context, ref: ref)
+                        MyRouter(context: context, ref: ref)
                             .navigateToRoute(RouterInfo.productRoute);
                       },
                       icon: const Icon(Icons.close)),
@@ -101,7 +107,12 @@ class _NewProductsState extends ConsumerState<NewProducts> {
                             'Animal Products',
                             'Crops',
                             'Fruits',
-                            'Vegetables'
+                            'Vegetables',
+                            'Seeds',
+                            'Fertilizers',
+                            'Fish',
+                            'Poultry',
+                            'Machinery',
                           ]
                               .map((e) => DropdownMenuItem(
                                     value: e,
@@ -129,7 +140,6 @@ class _NewProductsState extends ConsumerState<NewProducts> {
                         child: CustomTextFields(
                           hintText: 'Product description',
                           label: 'Product description',
-                          maxLines: 3,
                           validator: (des) {
                             if (des!.isEmpty) {
                               return 'Product description is required';
@@ -234,6 +244,99 @@ class _NewProductsState extends ConsumerState<NewProducts> {
                           },
                         )),
                     SizedBox(
+                      width: styles.isMobile
+                          ? double.infinity
+                          : styles.isTablet
+                              ? styles.width * 0.35
+                              : styles.width * 0.3,
+                      child: ListTile(
+                        title: const Text('Address and Location'),
+                        subtitle: Column(
+                          children: [
+                            CustomTextFields(
+                              hintText: 'Enter City',
+                              label: 'Product city',
+                              validator: (loc) {
+                                if (loc!.isEmpty) {
+                                  return 'Product city is required';
+                                }
+                                return null;
+                              },
+                              onSaved: (loc) {
+                                addressNotifier.setCity(loc!);
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            CustomDropDown(
+                                items: regionsList.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  );
+                                }).toList(),
+                                hintText: 'Select Region',
+                                label: 'Region',
+                                onChanged: (value) {
+                                  addressNotifier.setRegion(value);
+                                },
+                                validator: (reg) {
+                                  if (reg!.isEmpty) {
+                                    return 'Product region is required';
+                                  }
+                                  return null;
+                                }),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextFields(
+                                    label: 'Latitude',
+                                    hintText: 'location latitude',
+                                    controller: latController,
+                                    isDigitOnly: true,
+                                    validator: (add) {
+                                      if (add!.isEmpty) {
+                                        return 'Product location latitude is required';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (add) {
+                                      addressNotifier
+                                          .setLat(double.parse(add!));
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                Expanded(
+                                  child: CustomTextFields(
+                                    label: 'Longitude',
+                                    hintText: 'location longitude',
+                                    controller: longController,
+                                    isDigitOnly: true,
+                                    validator: (add) {
+                                      if (add!.isEmpty) {
+                                        return 'Product location longitude is required';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (add) {
+                                      addressNotifier
+                                          .setLong(double.parse(add!));
+                                    },
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      getLocation();
+                                    },
+                                    icon: const Icon(Icons.location_on))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                         width: styles.isMobile
                             ? double.infinity
                             : styles.isTablet
@@ -308,5 +411,42 @@ class _NewProductsState extends ConsumerState<NewProducts> {
             ],
           ),
         ));
+  }
+
+  void getLocation() async {
+    CustomDialog.showLoading(message: 'Getting location......');
+    try {
+      Location location = Location();
+
+      bool _serviceEnabled;
+      PermissionStatus _permissionGranted;
+      LocationData _locationData;
+
+      _serviceEnabled = await location.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await location.requestService();
+        if (!_serviceEnabled) {
+          return;
+        }
+      }
+
+      // _permissionGranted = await location.hasPermission();
+      // if (_permissionGranted == PermissionStatus.denied) {
+      //   _permissionGranted = await location.requestPermission();
+      //   if (_permissionGranted != PermissionStatus.granted) {
+      //     return;
+      //   }
+      // }
+
+      _locationData = await location.getLocation();
+      setState(() {
+        latController.text = _locationData.latitude.toString();
+        longController.text = _locationData.longitude.toString();
+      });
+      CustomDialog.dismiss();
+    } catch (error) {
+      CustomDialog.dismiss();
+      throw error;
+    }
   }
 }

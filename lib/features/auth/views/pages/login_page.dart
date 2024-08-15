@@ -235,7 +235,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                             TextButton(
                                               onPressed: () {
                                                 MyRouter(
-                                                        contex: context,
+                                                        context: context,
                                                         ref: ref)
                                                     .navigateToRoute(RouterInfo
                                                         .registerRoute);

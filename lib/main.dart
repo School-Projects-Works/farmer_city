@@ -57,7 +57,7 @@ class MyApp extends ConsumerWidget {
         );
         return widget;
       }),
-      routerConfig: MyRouter(ref: ref, contex: context).router(),
+      routerConfig: MyRouter(ref: ref, context: context).router(),
     );
   }
 }

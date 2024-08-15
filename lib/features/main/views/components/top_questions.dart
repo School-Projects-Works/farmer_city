@@ -47,10 +47,10 @@ class _TopQuestionsState extends ConsumerState<TopQuestions> {
                 children: topQuestions
                     .map((e) => ListTile(
                           onTap: () {
-                            MyRouter(contex: context, ref: ref).navigateToNamed(
-                                pathParms: {'id': e.id!},
-                                item: RouterInfo.postDetailRoute);
-                            
+                            MyRouter(context: context, ref: ref)
+                                .navigateToNamed(
+                                    pathParms: {'id': e.id!},
+                                    item: RouterInfo.postDetailRoute);
                           },
                           title: Text(
                             e.title ?? 'No title',

@@ -1,8 +1,13 @@
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/data/user_model.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/dashboard/data/oder_model.dart';
 import 'package:firmer_city/features/dashboard/services/order_services.dart';
+import 'package:firmer_city/features/market/data/product_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../cart/data/cart_model.dart';
+import '../../market/services/market_services.dart';
 
 final orderStreamProvider =
     StreamProvider.autoDispose<List<OrderModel>>((ref) async* {
@@ -60,6 +65,30 @@ class OrderProvider extends StateNotifier<OrderFilter> {
               element.buyerPhone.toLowerCase().contains(query.toLowerCase()))
           .toList();
       state = state.copyWith(filteredOrders: filtered);
+    }
+  }
+
+  void updateOrder(OrderModel copyWith) async {
+    CustomDialog.dismiss();
+    CustomDialog.showLoading(message: 'Updating order.....');
+    var result = await OrderServices.updateOrder(copyWith);
+    if (result) {
+      //if is delivery
+      //reduce stock
+      if (copyWith.status == 'delivered') {
+        var cart = copyWith.items.toList().map((e) => CartItem.fromMap(e)).toList();
+        for(var item in cart){
+          var product = ProductModel.fromMap(item.product);
+          product = product.copyWith(productStock: product.productStock - item.quantity);
+          await MarketServices.updateProduct(product);
+        }
+       
+      }
+      CustomDialog.dismiss();
+      CustomDialog.showToast(message: 'Order updated successfully');
+    } else {
+      CustomDialog.dismiss();
+      CustomDialog.showToast(message: 'Failed to update order');
     }
   }
 }

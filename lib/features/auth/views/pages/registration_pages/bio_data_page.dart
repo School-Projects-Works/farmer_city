@@ -29,8 +29,8 @@ class BioDataPage extends ConsumerWidget {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   if (ref.watch(currentScreenProvider) == 0) {
-                   MyRouter(contex:context ,ref: ref).navigateToRoute(
-                        RouterInfo.loginRoute);
+                    MyRouter(context: context, ref: ref)
+                        .navigateToRoute(RouterInfo.loginRoute);
                   } else {
                     ref.read(currentScreenProvider.notifier).state = 0;
                   }
@@ -203,9 +203,7 @@ class BioDataPage extends ConsumerWidget {
                   text: 'Create Account',
                   radius: 10,
                   color: primaryColor,
-                  icon: 
-                    Icons.create,
-                    
+                  icon: Icons.create,
                 ),
               ),
             ],

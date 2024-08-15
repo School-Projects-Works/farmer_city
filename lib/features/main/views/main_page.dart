@@ -34,7 +34,7 @@ class MainHomePage extends ConsumerWidget {
                 onPressed: () {
                   //todo: navigate to cart
                   if (ref.watch(cartProvider).items.isNotEmpty) {
-                    MyRouter(contex: context, ref: ref)
+                    MyRouter(context: context, ref: ref)
                         .navigateToRoute(RouterInfo.cartRoute);
                   } else {
                     CustomDialog.showToast(message: 'Cart is empty');

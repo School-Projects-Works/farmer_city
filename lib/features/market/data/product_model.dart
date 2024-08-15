@@ -21,7 +21,7 @@ class ProductModel {
   String productLocation;
   bool canBeDelivered;
   int productStock;
-  Map<String, dynamic>? address;
+  Map<String, dynamic> address;
   int createdAt;
   ProductModel({
     required this.id,
@@ -35,19 +35,20 @@ class ProductModel {
     required this.productOwnerId,
     required this.productOwnerName,
     required this.productOwnerImage,
-    this.productLocation='On Farm',
-    this.canBeDelivered=true,
+     this.productLocation='',
+     this.canBeDelivered=true,
     required this.productStock,
-    this.address,
+    this.address=const {},
     required this.createdAt,
   });
+  
 
   ProductModel copyWith({
     String? id,
     String? productName,
     String? productDescription,
     String? productType,
-    ValueGetter<String?>? productMeasurement,
+    String? productMeasurement,
     String? productPrice,
     List<String>? productImages,
     String? productCategory,
@@ -57,7 +58,7 @@ class ProductModel {
     String? productLocation,
     bool? canBeDelivered,
     int? productStock,
-    ValueGetter<Map<String, dynamic>?>? address,
+    Map<String, dynamic>? address,
     int? createdAt,
   }) {
     return ProductModel(
@@ -65,7 +66,7 @@ class ProductModel {
       productName: productName ?? this.productName,
       productDescription: productDescription ?? this.productDescription,
       productType: productType ?? this.productType,
-      productMeasurement: productMeasurement != null ? productMeasurement() : this.productMeasurement,
+      productMeasurement: productMeasurement ?? this.productMeasurement,
       productPrice: productPrice ?? this.productPrice,
       productImages: productImages ?? this.productImages,
       productCategory: productCategory ?? this.productCategory,
@@ -75,30 +76,36 @@ class ProductModel {
       productLocation: productLocation ?? this.productLocation,
       canBeDelivered: canBeDelivered ?? this.canBeDelivered,
       productStock: productStock ?? this.productStock,
-      address: address != null ? address() : this.address,
+      address: address ?? this.address,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'productName': productName,
-      'productDescription': productDescription,
-      'productType': productType,
-      'productMeasurement': productMeasurement,
-      'productPrice': productPrice,
-      'productImages': productImages,
-      'productCategory': productCategory,
-      'productOwnerId': productOwnerId,
-      'productOwnerName': productOwnerName,
-      'productOwnerImage': productOwnerImage,
-      'productLocation': productLocation,
-      'canBeDelivered': canBeDelivered,
-      'productStock': productStock,
-      'address': address,
-      'createdAt': createdAt,
-    };
+    final result = <String, dynamic>{};
+  
+    result.addAll({'id': id});
+    result.addAll({'productName': productName});
+    result.addAll({'productDescription': productDescription});
+    result.addAll({'productType': productType});
+    if(productMeasurement != null){
+      result.addAll({'productMeasurement': productMeasurement});
+    }
+    result.addAll({'productPrice': productPrice});
+    result.addAll({'productImages': productImages});
+    result.addAll({'productCategory': productCategory});
+    result.addAll({'productOwnerId': productOwnerId});
+    result.addAll({'productOwnerName': productOwnerName});
+    result.addAll({'productOwnerImage': productOwnerImage});
+    result.addAll({'productLocation': productLocation});
+    result.addAll({'canBeDelivered': canBeDelivered});
+    result.addAll({'productStock': productStock});
+    if(address != null){
+      result.addAll({'address': address});
+    }
+    result.addAll({'createdAt': createdAt});
+  
+    return result;
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
@@ -124,8 +131,7 @@ class ProductModel {
 
   String toJson() => json.encode(toMap());
 
-  factory ProductModel.fromJson(String source) =>
-      ProductModel.fromMap(json.decode(source));
+  factory ProductModel.fromJson(String source) => ProductModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -173,74 +179,6 @@ class ProductModel {
       productStock.hashCode ^
       address.hashCode ^
       createdAt.hashCode;
-  }
-
-  static List<ProductModel> dummyProduct(UserModel user) {
-    try{
-    final _faker = Faker();
-   
-    List<ProductModel> data = [];
-    for (var i = 0; i < products.length; i++) {
-      var item = products[i];
-      var address = AddressModel(
-        city: _faker.address.city(),
-        region: _faker.address.state(),
-        address: _faker.address.streetAddress(),
-        lat: _faker.geo.latitude(),
-        long: _faker.geo.longitude(),
-        phone: user.phone!,
-      );
-      var product = ProductModel(
-        id: _faker.guid.guid(),
-        productName: item['productName'],
-        productDescription: item['description'],
-        productType:
-            _faker.randomGenerator.element(['Animal Product', 'Plant Product']),
-        productMeasurement: _faker.randomGenerator.element([
-          'Kg',
-          'Litre',
-          'Unit',
-          'Bag',
-          'Create',
-          'Box',
-          'Bottle',
-          'Bundle',
-          'Bunch',
-          'Can',
-          'Carton',
-          'Dozen',
-          'Gallon',
-          'Gram',
-          'Meter',
-          'Pack',
-          'Pair',
-          'Piece',
-          'Roll',
-          'Set',
-          'Ton',
-          'Yard'
-        ]),
-        productPrice: _faker.randomGenerator.decimal(min: 10).toString(),
-        productImages: item['images'],
-        productCategory: item['parentCategory'],
-        productOwnerId: user.id!,
-        productOwnerName: user.name!,
-        productOwnerImage: user.profileImage??_faker.image.image(keywords: ['profile']),
-        productStock: _faker.randomGenerator.integer(30),
-        address: address.toMap(),
-        canBeDelivered: _faker.randomGenerator.boolean(),
-        productLocation: _faker.randomGenerator.boolean()
-            ? 'On Farm'
-            : 'Off Farm',
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-      );
-      data.add(product);
-    }
-    return data;
-    }catch(e){
-      print (e);
-      return [];
-    }
   }
 }
 
@@ -332,4 +270,73 @@ class AddressModel {
         long.hashCode ^
         phone.hashCode;
   }
+    static List<ProductModel> dummyProduct(UserModel user) {
+    try {
+      final _faker = Faker();
+
+      List<ProductModel> data = [];
+      for (var i = 0; i < products.length; i++) {
+        var item = products[i];
+        var address = AddressModel(
+          city: _faker.address.city(),
+          region: _faker.address.state(),
+          address: _faker.address.streetAddress(),
+          lat: _faker.geo.latitude(),
+          long: _faker.geo.longitude(),
+          phone: user.phone!,
+        );
+        var product = ProductModel(
+          id: _faker.guid.guid(),
+          productName: item['productName'],
+          productDescription: item['description'],
+          productType: _faker.randomGenerator
+              .element(['Animal Product', 'Plant Product']),
+          productMeasurement: _faker.randomGenerator.element([
+            'Kg',
+            'Litre',
+            'Unit',
+            'Bag',
+            'Create',
+            'Box',
+            'Bottle',
+            'Bundle',
+            'Bunch',
+            'Can',
+            'Carton',
+            'Dozen',
+            'Gallon',
+            'Gram',
+            'Meter',
+            'Pack',
+            'Pair',
+            'Piece',
+            'Roll',
+            'Set',
+            'Ton',
+            'Yard'
+          ]),
+          productPrice: _faker.randomGenerator.decimal(min: 10).toString(),
+          productImages: item['images'],
+          productCategory: item['parentCategory'],
+          productOwnerId: user.id!,
+          productOwnerName: user.name!,
+          productOwnerImage:
+              user.profileImage ?? _faker.image.image(keywords: ['profile']),
+          productStock: _faker.randomGenerator.integer(30),
+          address: address.toMap(),
+          canBeDelivered: _faker.randomGenerator.boolean(),
+          productLocation:
+              _faker.randomGenerator.boolean() ? 'On Farm' : 'Off Farm',
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+        );
+        data.add(product);
+      }
+      return data;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+
 }

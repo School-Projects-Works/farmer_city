@@ -27,7 +27,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
   Widget build(BuildContext context) {
     var post = ref.watch(postStream);
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = Styles( context);
+    var styles = Styles(context);
     var user = ref.watch(userProvider);
     return Container(
       width: breakPoint.screenWidth,
@@ -85,17 +85,17 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                       CustomButton(
                                           text: 'Ask Community',
                                           color: secondaryColor,
-                                          icon: 
-                                            Icons.add,
-                                           
+                                          icon: Icons.add,
                                           onPressed: () {
                                             if (user.id == null) {
-                                               MyRouter(
-                                                      contex: context, ref: ref)
-                                                  .navigateToRoute( RouterInfo.loginRoute);
+                                              MyRouter(
+                                                      context: context,
+                                                      ref: ref)
+                                                  .navigateToRoute(
+                                                      RouterInfo.loginRoute);
                                               return;
                                             }
-                                            MyRouter(contex: context, ref: ref)
+                                            MyRouter(context: context, ref: ref)
                                                 .navigateToRoute(
                                                     RouterInfo.createPostRoute);
                                           }),
@@ -138,9 +138,7 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                                 .read(isSearching.notifier)
                                                 .state = true;
                                           },
-                                          icon: 
-                                            Icons.search,
-                                            
+                                          icon: Icons.search,
                                           color: primaryColor,
                                         ),
                                         const SizedBox(width: 10),
@@ -149,18 +147,18 @@ class _CommunityPageState extends ConsumerState<CommunityPage> {
                                           radius: 10,
                                           onPressed: () {
                                             if (user.id == null) {
-                                               MyRouter(
-                                                      contex: context, ref: ref)
-                                                  .navigateToRoute( RouterInfo.loginRoute);
+                                              MyRouter(
+                                                      context: context,
+                                                      ref: ref)
+                                                  .navigateToRoute(
+                                                      RouterInfo.loginRoute);
                                               return;
                                             }
-                                            MyRouter(contex: context, ref: ref)
+                                            MyRouter(context: context, ref: ref)
                                                 .navigateToRoute(
                                                     RouterInfo.createPostRoute);
                                           },
-                                          icon: 
-                                            Icons.add,
-                                           
+                                          icon: Icons.add,
                                           color: secondaryColor,
                                         ),
                                       ],

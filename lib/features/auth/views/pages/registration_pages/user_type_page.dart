@@ -37,8 +37,8 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   if (ref.watch(currentScreenProvider) == 0) {
-                   MyRouter(contex: context,ref: ref).navigateToRoute(
-                        RouterInfo.loginRoute);
+                    MyRouter(context: context, ref: ref)
+                        .navigateToRoute(RouterInfo.loginRoute);
                   } else {
                     ref.read(currentScreenProvider.notifier).state = 0;
                   }
@@ -73,8 +73,8 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text('Which of the following best describes you?',
-                          style: styles.body(
-                              mobile: 18, desktop: 25, tablet: 20)),
+                          style:
+                              styles.body(mobile: 18, desktop: 25, tablet: 20)),
                       subtitle: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Wrap(
@@ -163,8 +163,8 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text('What is your gender ?',
-                          style: styles.body(
-                              mobile: 18, desktop: 25, tablet: 20)),
+                          style:
+                              styles.body(mobile: 18, desktop: 25, tablet: 20)),
                       subtitle: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Wrap(
@@ -415,9 +415,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
                     text: 'Continue',
                     radius: 10,
                     color: primaryColor,
-                    icon: 
-                      Icons.arrow_forward_outlined,
-                      
+                    icon: Icons.arrow_forward_outlined,
                   ),
                 ),
             ],

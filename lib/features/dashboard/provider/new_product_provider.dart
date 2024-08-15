@@ -1,11 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:firmer_city/config/router/router.dart';
-import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/market/data/product_model.dart';
-import 'package:firmer_city/features/market/provider/market_provider.dart';
 import 'package:firmer_city/features/market/services/market_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +28,7 @@ class NewProductProvider extends StateNotifier<ProductModel> {
             productCategory: '',
             productOwnerId: '',
             productOwnerName: '',
+            productLocation: '',
             productOwnerImage: '',
             productStock: 0));
 
@@ -55,20 +53,19 @@ class NewProductProvider extends StateNotifier<ProductModel> {
   }
 
   void setMeasurement(value) {
-    state = state.copyWith(productMeasurement: () => value.toString());
+    state = state.copyWith(productMeasurement: value.toString());
   }
 
   void pickImage({required WidgetRef ref}) async {
     var imagePicker = ImagePicker();
-      var picks = await imagePicker.pickMultiImage(
-          imageQuality: 80, maxWidth: 800, limit: 5);
-      for (var i = 0; i < picks.length; i++) {
-        var image = await picks[i].readAsBytes();
-        if (ref.watch(productImagesProvider).length < 5) {
-          ref.read(productImagesProvider.notifier).addImage(image);
-        }
+    var picks = await imagePicker.pickMultiImage(
+        imageQuality: 80, maxWidth: 800, limit: 5);
+    for (var i = 0; i < picks.length; i++) {
+      var image = await picks[i].readAsBytes();
+      if (ref.watch(productImagesProvider).length < 5) {
+        ref.read(productImagesProvider.notifier).addImage(image);
       }
-    
+    }
   }
 
   void removeImage(Uint8List image, {required WidgetRef ref}) {
@@ -81,13 +78,9 @@ class NewProductProvider extends StateNotifier<ProductModel> {
       required GlobalKey<FormState> form}) async {
     CustomDialog.showLoading(message: 'Saving product...');
     var user = ref.watch(userProvider);
-    AddressModel address = AddressModel(
-        city: '',
-        region: 'region',
-        address: 'address',
-        lat: 0,
-        long: 0,
-        phone: user.phone!);
+  
+    AddressModel address = ref.read(productAddProvider);
+    address = address.copyWith(phone: user.phone);
     List<String> images = [];
     if (ref.watch(productImagesProvider).isNotEmpty) {
       images =
@@ -99,7 +92,7 @@ class NewProductProvider extends StateNotifier<ProductModel> {
         id: MarketServices.getId(),
         canBeDelivered: true,
         productType: state.productCategory,
-        address: () => address.toMap(),
+        address: address.toMap(),
         productLocation: 'On Farm',
         productImages: images,
         createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -122,9 +115,9 @@ class NewProductProvider extends StateNotifier<ProductModel> {
           productOwnerImage: '',
           productStock: 0);
       ref.read(productImagesProvider.notifier).clearImages();
+      ref.read(productAddProvider.notifier).clear();
       form.currentState!.reset();
-      MyRouter(contex: context, ref: ref)
-          .navigateToRoute(RouterInfo.productRoute);
+     
     } else {
       CustomDialog.dismiss();
       CustomDialog.showToast(message: 'Failed to save product');
@@ -148,8 +141,56 @@ class ProductImages extends StateNotifier<List<Uint8List>> {
 
     state = images;
   }
-  
+
   void clearImages() {
     state = [];
+  }
+}
+
+
+
+final productAddProvider = StateNotifierProvider<ProductAddProvider, AddressModel>(
+      (ref) {
+    return ProductAddProvider();
+  },
+);
+
+class ProductAddProvider extends StateNotifier<AddressModel> {
+  ProductAddProvider()
+      : super(AddressModel(
+    city: '',
+    region: 'region',
+    address: 'address',
+    lat: 0,
+    long: 0,
+    phone: ''));
+
+  void setCity(String s) {
+    state = state.copyWith(city: s);
+  }
+
+  void setRegion(String s) {
+    state = state.copyWith(region: s);
+  }
+
+  void setAddress(String s) {
+    state = state.copyWith(address: s);
+  }
+
+  void setPhone(String s) {
+    state = state.copyWith(phone: s);
+  }
+
+  void setLat(double s) {
+    state = state.copyWith(lat: s);
+  }
+
+  void setLong(double s) {
+    state = state.copyWith(long: s);
+  }
+
+
+  void clear(){
+    state = state.copyWith(city: '', region: '', address: '', lat: 0, long: 0, phone: '');
   }
 }

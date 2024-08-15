@@ -52,7 +52,7 @@ class SideBar extends ConsumerWidget {
                   isActive: ref.watch(routerProvider) ==
                       RouterInfo.dashboardRoute.name,
                   onTap: () {
-                    MyRouter(contex: context, ref: ref)
+                    MyRouter(context: context, ref: ref)
                         .navigateToRoute(RouterInfo.dashboardRoute);
                   },
                 ),
@@ -66,7 +66,7 @@ class SideBar extends ConsumerWidget {
                     isActive: ref.watch(routerProvider) ==
                         RouterInfo.productRoute.name,
                     onTap: () {
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.productRoute);
                     },
                   ),
@@ -81,7 +81,7 @@ class SideBar extends ConsumerWidget {
                     isActive: ref.watch(routerProvider) ==
                         RouterInfo.ordersRoute.name,
                     onTap: () {
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.ordersRoute);
                     },
                   ),
@@ -96,7 +96,7 @@ class SideBar extends ConsumerWidget {
                     isActive: ref.watch(routerProvider) ==
                         RouterInfo.profileRoute.name,
                     onTap: () {
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.profileRoute);
                     },
                   ),

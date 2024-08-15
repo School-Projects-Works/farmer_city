@@ -23,12 +23,12 @@ class _PostItemState extends ConsumerState<PostItem> {
   @override
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = Styles( context);
+    var styles = Styles(context);
     var user = ref.watch(userProvider);
     var commentsStream = ref.watch(commentsStreamProvider(widget.post.id!));
     return InkWell(
       onTap: () {
-        MyRouter(contex: context, ref: ref).navigateToNamed(
+        MyRouter(context: context, ref: ref).navigateToNamed(
             item: RouterInfo.postDetailRoute,
             pathParms: {'id': widget.post.id ?? ''});
       },
@@ -105,10 +105,10 @@ class _PostItemState extends ConsumerState<PostItem> {
                             },
                             onSelected: (value) {
                               if (value == 0) {
-                                MyRouter(contex: context, ref: ref)
-                                    .navigateToNamed(                                  
-                                    item: RouterInfo.editPostRoute,
-                                    pathParms: {'id': widget.post.id!});
+                                MyRouter(context: context, ref: ref)
+                                    .navigateToNamed(
+                                        item: RouterInfo.editPostRoute,
+                                        pathParms: {'id': widget.post.id!});
                               } else {
                                 CustomDialog.showInfo(
                                     message:
@@ -173,10 +173,10 @@ class _PostItemState extends ConsumerState<PostItem> {
                               },
                               onSelected: (value) {
                                 if (value == 0) {
-                                  MyRouter(contex: context, ref: ref)
+                                  MyRouter(context: context, ref: ref)
                                       .navigateToNamed(
-                                      item: RouterInfo.editPostRoute,
-                                      pathParms: {'id': widget.post.id!});
+                                          item: RouterInfo.editPostRoute,
+                                          pathParms: {'id': widget.post.id!});
                                 } else {
                                   CustomDialog.showInfo(
                                       message:

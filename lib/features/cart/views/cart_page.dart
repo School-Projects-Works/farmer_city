@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
@@ -48,7 +46,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                       spacing: 15,
                       runSpacing: 50,
                       alignment: WrapAlignment.center,
-                      children: [buildCartList(cart), builTotalSide(cart)],
+                      children: [buildCartList(cart), buildTotalSide(cart)],
                     ),
                   ],
                 ),
@@ -98,13 +96,13 @@ class _CartPageState extends ConsumerState<CartPage> {
               child: SizedBox(
                   width: 200,
                   child: CustomButton(
-                    text: 'Vist Market',
+                    text: 'Visit Market',
                     color: primaryColor,
                     radius: 10,
                     onPressed: () {
                       ref.read(routerProvider.notifier).state =
                           RouterInfo.marketRoute.name;
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.marketRoute);
                     },
                   )),
@@ -185,6 +183,12 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   ref
                                       .read(cartProvider.notifier)
                                       .removeFromCart(product);
+                                  //check if the cart is empty and navigate to market
+                                  if (ref.watch(cartProvider).items.isEmpty) {
+                                    MyRouter(context: context, ref: ref)
+                                        .navigateToRoute(
+                                            RouterInfo.marketRoute);
+                                  }
                                 }),
                           ],
                         )
@@ -199,7 +203,7 @@ class _CartPageState extends ConsumerState<CartPage> {
     );
   }
 
-  Widget builTotalSide(CartModel cart) {
+  Widget buildTotalSide(CartModel cart) {
     var user = ref.watch(userProvider);
     var breakPoint = ResponsiveBreakpoints.of(context);
     var styles = Styles(context);
@@ -273,23 +277,37 @@ class _CartPageState extends ConsumerState<CartPage> {
             const SizedBox(
               height: 15,
             ),
-            Text('Delivery Address',
-                style: styles.body(
-                    fontWeight: FontWeight.w500,
-                    desktop: 18,
-                    tablet: 17,
-                    mobile: 15)),
+            if (!ref.watch(isPickUpProvider))
+              Text('Delivery Address',
+                  style: styles.body(
+                      fontWeight: FontWeight.w500,
+                      desktop: 18,
+                      tablet: 17,
+                      mobile: 15)),
             const SizedBox(height: 5),
-            buildAddressInput(),
+            if (!ref.watch(isPickUpProvider)) buildAddressInput(),
             const SizedBox(
               height: 15,
+            ),
+            //check box for Pickup
+            Row(
+              children: [
+                Checkbox(
+                    value: ref.watch(isPickUpProvider),
+                    onChanged: (value) {
+                      ref.read(isPickUpProvider.notifier).state = value!;
+                    }),
+                Text('Pickup Order',
+                    style: styles.body(
+                        desktop: 18, tablet: 17, mobile: 15, fontWeight: null)),
+              ],
             ),
             CustomButton(
               text: 'Checkout',
               onPressed: () {
                 if (user.id == null) {
                   CustomDialog.showToast(message: 'Login to continue');
-                  MyRouter(contex: context, ref: ref)
+                  MyRouter(context: context, ref: ref)
                       .navigateToRoute(RouterInfo.loginRoute);
                 } else if (ref
                         .watch(selectedPaymentProvider)
@@ -302,8 +320,10 @@ class _CartPageState extends ConsumerState<CartPage> {
                         .contains('Card') &&
                     !cardFormKey.currentState!.validate()) {
                 } else {
-                  if(ref.watch(addressProvider).isEmpty){
-                    CustomDialog.showToast(message: 'Enter Delivery Address');
+                  if (ref.watch(addressProvider).isEmpty &&
+                      !ref.watch(isPickUpProvider)) {
+                    CustomDialog.showToast(
+                        message: 'Enter Delivery Address or Select Pickup');
                     return;
                   }
                   ref
@@ -333,19 +353,16 @@ class _CartPageState extends ConsumerState<CartPage> {
           height: 10,
         ),
         //momo provider with radio group
-        momoItem('MTN Mobile Money', 'MTN Mobile Money',
-            ref.watch(momoProvider).network == 'MTN Mobile Money'),
+        momoItem('MTN Mobile Money', 'MTN Mobile Money'),
 
         const SizedBox(
           height: 10,
         ),
-        momoItem('Telecel Cash', 'Telecel Cash',
-            ref.watch(momoProvider).network == 'Telecel Cash'),
+        momoItem('Telecel Cash', 'Telecel Cash'),
         const SizedBox(
           height: 10,
         ),
-        momoItem('AirtelTigo Cash', 'AirtelTigo Cash',
-            ref.watch(momoProvider).network == 'AirtelTigo Cash'),
+        momoItem('AirtelTigo Cash', 'AirtelTigo Cash'),
 
         const SizedBox(
           height: 10,
@@ -364,8 +381,12 @@ class _CartPageState extends ConsumerState<CartPage> {
     );
   }
 
-  Widget momoItem(String title, String value, bool isSelected) {
+  Widget momoItem(
+    String title,
+    String value,
+  ) {
     var styles = Styles(context);
+    var isSelected = ref.watch(momoProvider).network == value;
     return InkWell(
       onTap: () {
         ref.read(momoProvider.notifier).setProvider(value);
@@ -443,7 +464,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                   max: 8,
                   validator: (date) {
                     if (date == null || date.isEmpty) {
-                      return 'Epired date Require';
+                      return 'Expired date Require';
                     } else if (DateTime.tryParse(date) == null) {
                       return 'Enter a valid date';
                     }

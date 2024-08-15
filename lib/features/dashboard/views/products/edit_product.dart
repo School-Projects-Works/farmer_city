@@ -53,7 +53,7 @@ class _EditProductState extends ConsumerState<EditProduct> {
                   //close
                   IconButton(
                       onPressed: () {
-                        MyRouter(contex: context, ref: ref)
+                        MyRouter(context: context, ref: ref)
                             .navigateToRoute(RouterInfo.productRoute);
                       },
                       icon: const Icon(Icons.close)),

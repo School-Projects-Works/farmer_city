@@ -30,7 +30,7 @@ class MomoPaymentProvider extends StateNotifier<MomoPayment> {
   MomoPaymentProvider() : super(MomoPayment());
 
   void setProvider(String value) {
-    state = state.copyWith(phoneNumber:()=> value);
+    state = state.copyWith(network:()=> value);
   }
 
   void setPhone(String value) {
@@ -106,3 +106,8 @@ class CardDetailsProvider extends StateNotifier<CardDetails> {
   }
 
 }
+
+
+final isPickUpProvider = StateProvider<bool>((ref) {
+  return false;
+});

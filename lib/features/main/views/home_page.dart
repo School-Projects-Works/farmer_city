@@ -19,7 +19,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     var breakPoint = ResponsiveBreakpoints.of(context);
-    
+
     return SizedBox(
       width: breakPoint.screenWidth,
       height: breakPoint.screenHeight,
@@ -30,20 +30,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             children: [
               LandingPage(),
               const SizedBox(height: 20),
-              if (breakPoint.largerThan(TABLET))
-                const Row(
-                  children: [
-                    Expanded(
-                      child: FeaturedProducts(),
-                    ),
-                    TopQuestions()
-                    
-                  ],
-                ),
-                const SizedBox(height: 20),
-                if (breakPoint.smallerOrEqualTo(TABLET))
-                const FeaturedProducts(),
-             // const TopQuestions(),
+              if (breakPoint.largerThan(TABLET)) const FeaturedProducts(),
+              // TopQuestions()
+              const SizedBox(height: 20),
+              if (breakPoint.smallerOrEqualTo(TABLET)) const FeaturedProducts(),
+              // const TopQuestions(),
               const SizedBox(height: 20),
               const FooterPage(),
             ],

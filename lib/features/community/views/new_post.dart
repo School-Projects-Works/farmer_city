@@ -24,7 +24,7 @@ class _NewPostState extends ConsumerState<NewPost> {
   Widget build(BuildContext context) {
     var notifier = ref.read(newCommunityProvider.notifier);
     var breakPoint = ResponsiveBreakpoints.of(context);
-    var styles = Styles( context);
+    var styles = Styles(context);
     var user = ref.watch(userProvider);
     return Container(
       padding: const EdgeInsets.only(top: 100, left: 15, right: 15, bottom: 15),
@@ -56,8 +56,8 @@ class _NewPostState extends ConsumerState<NewPost> {
                       //back button
                       IconButton(
                         onPressed: () {
-                           MyRouter(contex: context, ref: ref)
-                              .navigateToRoute( RouterInfo.communityRoute);
+                          MyRouter(context: context, ref: ref)
+                              .navigateToRoute(RouterInfo.communityRoute);
                         },
                         icon: const Icon(Icons.close),
                         iconSize: 30,
@@ -145,7 +145,8 @@ class _NewPostState extends ConsumerState<NewPost> {
                             return Column(
                               children: [
                                 Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 6),
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 6),
                                   width: 100,
                                   height: 90,
                                   decoration: BoxDecoration(
@@ -174,18 +175,19 @@ class _NewPostState extends ConsumerState<NewPost> {
                   CustomButton(
                     text: 'Submit Post',
                     icon: MdiIcons.send,
-                    onPressed: (){
-                      if(user.id==null){
-                       MyRouter(contex: context,ref: ref).navigateToRoute( RouterInfo.loginRoute);
+                    onPressed: () {
+                      if (user.id == null) {
+                        MyRouter(context: context, ref: ref)
+                            .navigateToRoute(RouterInfo.loginRoute);
                         return;
                       }
-                      if(_formKey.currentState!.validate()){
+                      if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         notifier.createPost(
-                          ref:ref,context:context,
+                          ref: ref,
+                          context: context,
                         );
                       }
-                    
                     },
                   ),
                   const SizedBox(

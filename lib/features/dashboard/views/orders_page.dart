@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:firmer_city/core/widget/custom_dialog.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
@@ -215,6 +216,33 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
                                             DateTime.fromMillisecondsSinceEpoch(
                                                 order.createdAt)))),
                                     DataCell(PopupMenuButton(
+                                      onSelected: (value) {
+                                        if (value == 'Delivered') {
+                                          CustomDialog.showInfo(
+                                              message:
+                                                  'Are you sure you want to mark this order as delivered?',
+                                              buttonText: 'Yes',
+                                              onPressed: () {
+                                                ref
+                                                    .read(
+                                                        orderProvider.notifier)
+                                                    .updateOrder(order.copyWith(
+                                                        status: 'delivered'));
+                                              });
+                                        } else {
+                                          CustomDialog.showInfo(
+                                              message:
+                                                  'Are you sure you want to cancel this order?',
+                                              buttonText: 'Yes',
+                                              onPressed: () {
+                                                ref
+                                                    .read(
+                                                        orderProvider.notifier)
+                                                    .updateOrder(order.copyWith(
+                                                        status: 'cancelled'));
+                                              });
+                                        }
+                                      },
                                       itemBuilder: (context) {
                                         return [
                                           //show status
@@ -224,6 +252,7 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
                                                       'cancelled' &&
                                                   order.buyerId != user.id)
                                             PopupMenuItem(
+                                              value: 'Delivered',
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 40,
@@ -241,17 +270,19 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
                                               order.status.toLowerCase() !=
                                                   'delivered')
                                             PopupMenuItem(
+                                                value: 'Cancelled',
                                                 child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 40,
-                                                  top: 5,
-                                                  bottom: 5,
-                                                  left: 10),
-                                              child: Text(
-                                                'Cancell',
-                                                style: styles.body(),
-                                              ),
-                                            )),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 40,
+                                                          top: 5,
+                                                          bottom: 5,
+                                                          left: 10),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: styles.body(),
+                                                  ),
+                                                )),
                                         ];
                                       },
                                       child: const Icon(Icons.apps),

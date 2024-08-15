@@ -233,6 +233,22 @@ class _DashBoardState extends ConsumerState<DashBoard> {
                                           DateTime.fromMillisecondsSinceEpoch(
                                               order.createdAt)))),
                                   DataCell(PopupMenuButton(
+                                    onSelected: (value) {
+                                      if (value == 'Delivered') {
+                                        var copyWith = order.copyWith(
+                                            status: 'Delivered',
+                                            deliveryDetails: {
+                                              'address': order.buyerAddress
+                                            });
+                                        ref.read(orderProvider.notifier)
+                                            .updateOrder(copyWith);
+                                      } else {
+                                        var copyWith = order.copyWith(
+                                            status: 'Cancelled');
+                                        ref.read(orderProvider.notifier)
+                                            .updateOrder(copyWith);
+                                      }
+                                    },
                                     itemBuilder: (context) {
                                       return [
                                         //show status
@@ -242,6 +258,7 @@ class _DashBoardState extends ConsumerState<DashBoard> {
                                                     'cancelled' &&
                                                 order.buyerId != user.id)
                                           PopupMenuItem(
+                                            value: 'Delivered',
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 40,
@@ -259,6 +276,7 @@ class _DashBoardState extends ConsumerState<DashBoard> {
                                             order.status.toLowerCase() !=
                                                 'delivered')
                                           PopupMenuItem(
+                                              value: 'Cancelled',
                                               child: Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 40,
@@ -266,7 +284,7 @@ class _DashBoardState extends ConsumerState<DashBoard> {
                                                 bottom: 5,
                                                 left: 10),
                                             child: Text(
-                                              'Cancell',
+                                              'Cancel',
                                               style: styles.body(),
                                             ),
                                           )),

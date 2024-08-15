@@ -1,7 +1,5 @@
 import 'dart:typed_data';
-
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firmer_city/core/constant/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -172,11 +170,32 @@ class GPTServices {
       final ref = _storage
           .ref('images')
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
-      await ref.putData(imageToBase64, SettableMetadata(contentType: 'image/jpg'));
+      await ref.putData(
+          imageToBase64, SettableMetadata(contentType: 'image/jpg'));
       return await ref.getDownloadURL();
     } catch (e) {
       print(e);
       return '';
     }
+  }
+}
+
+const String baseUrl =
+    'https://sms.arkesel.com/sms/api?action=send-sms&api_key=SmtPRE5HZk11Q3lKdHNGamJFRnE&to=PhoneNumber&from=SenderID&sms=YourMessage';
+
+Future<bool> sendMessage(String phoneNumber, String message) async {
+  try {
+    final response = await http.get(Uri.parse(baseUrl
+        .replaceFirst('PhoneNumber', phoneNumber)
+        .replaceFirst('SenderID', 'FarmerCity')
+        .replaceFirst('YourMessage', message)));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    print(e);
+    return false;
   }
 }

@@ -40,7 +40,7 @@ class _NavBarState extends ConsumerState<NavBar> {
         children: [
           InkWell(
             onTap: () {
-              MyRouter(contex: context, ref: ref)
+              MyRouter(context: context, ref: ref)
                   .navigateToRoute(RouterInfo.homeRoute);
             },
             child: Image.asset(
@@ -57,8 +57,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                     isActive:
                         ref.watch(routerProvider) == RouterInfo.homeRoute.name,
                     onTap: () {
-                    
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.homeRoute);
                     }),
                 const SizedBox(width: 25),
@@ -67,8 +66,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                     isActive: ref.watch(routerProvider) ==
                         RouterInfo.communityRoute.name,
                     onTap: () {
-                      
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.communityRoute);
                     }),
                 const SizedBox(width: 25),
@@ -77,7 +75,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                     isActive: ref.watch(routerProvider) ==
                         RouterInfo.marketRoute.name,
                     onTap: () {
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.marketRoute);
                     }),
                 const SizedBox(width: 25),
@@ -86,8 +84,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                     isActive: ref.watch(routerProvider) ==
                         RouterInfo.assistantRoute.name,
                     onTap: () {
-                     
-                      MyRouter(contex: context, ref: ref)
+                      MyRouter(context: context, ref: ref)
                           .navigateToRoute(RouterInfo.assistantRoute);
                     }),
                 const SizedBox(width: 25),
@@ -99,7 +96,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                       onTap: () {
                         ref.read(routerProvider.notifier).state =
                             RouterInfo.loginRoute.name;
-                        MyRouter(contex: context, ref: ref)
+                        MyRouter(context: context, ref: ref)
                             .navigateToRoute(RouterInfo.loginRoute);
                       })
                 else
@@ -117,7 +114,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                                   .signOut(context: context, ref: ref);
                             });
                       } else if (value == 'dashboard') {
-                        MyRouter(contex: context, ref: ref)
+                        MyRouter(context: context, ref: ref)
                             .navigateToRoute(RouterInfo.dashboardRoute);
                       }
                     },
@@ -191,7 +188,7 @@ class _NavBarState extends ConsumerState<NavBar> {
               ],
               icon: const Icon(Icons.menu),
               onSelected: (RouterInfo value) {
-                MyRouter(contex: context, ref: ref).navigateToRoute(value);
+                MyRouter(context: context, ref: ref).navigateToRoute(value);
               },
             ),
         ],
@@ -217,7 +214,7 @@ class NavItem extends ConsumerStatefulWidget {
 class _NavItemState extends ConsumerState<NavItem> {
   @override
   Widget build(BuildContext context) {
-    var styles = Styles( context);
+    var styles = Styles(context);
     return InkWell(
       onTap: widget.onTap,
       child: Container(

@@ -67,7 +67,7 @@ class NewCommunityProvider extends StateNotifier<PostModel> {
     await CommunityServices.savePost(state);
     CustomDialog.dismiss();
     CustomDialog.showToast(message: 'Post created successfully');
-    MyRouter(contex: context, ref: ref)
+    MyRouter(context: context, ref: ref)
         .navigateToRoute(RouterInfo.communityRoute);
   }
 }
@@ -126,7 +126,8 @@ class EditPostProvider extends StateNotifier<PostModel> {
     await CommunityServices.updatePost(state);
     CustomDialog.dismiss();
     CustomDialog.showToast(message: 'Post updated successfully');
-    MyRouter(contex: context,ref: ref).navigateToRoute( RouterInfo.communityRoute);
+    MyRouter(context: context, ref: ref)
+        .navigateToRoute(RouterInfo.communityRoute);
   }
 
   void setPost(PostModel post) {

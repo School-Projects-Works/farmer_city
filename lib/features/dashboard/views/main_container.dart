@@ -21,7 +21,7 @@ class MainContainer extends ConsumerWidget {
     var breakPoint = ResponsiveBreakpoints.of(context);
     var ordersStream = ref.watch(orderStreamProvider);
     var productsStream = ref.watch(dashboardProductStreamProvider);
-   return SafeArea(
+    return SafeArea(
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: primaryColor,
@@ -42,8 +42,7 @@ class MainContainer extends ConsumerWidget {
                         return AssetImage(
                           user.gender == 'Male'
                               ? Assets.imagesMale
-                             
-                                  : Assets.imagesFemale,
+                              : Assets.imagesFemale,
                         );
                       } else {
                         NetworkImage(user.profileImage!);
@@ -59,7 +58,7 @@ class MainContainer extends ConsumerWidget {
                             icon: Icons.home,
                             title: 'Home Page',
                             onTap: () {
-                              MyRouter(contex: context, ref: ref)
+                              MyRouter(context: context, ref: ref)
                                   .navigateToRoute(RouterInfo.homeRoute);
                               Navigator.of(context).pop();
                             }),
@@ -73,7 +72,6 @@ class MainContainer extends ConsumerWidget {
                             onTap: () {
                               CustomDialog.showInfo(
                                 message: 'Are you sure you want to logout?',
-                               
                                 buttonText: 'Logout',
                                 onPressed: () {
                                   ref
@@ -109,55 +107,48 @@ class MainContainer extends ConsumerWidget {
                                 icon: Icons.dashboard,
                                 title: 'Dashboard',
                                 onTap: () {
-                                  MyRouter(contex: context, ref: ref)
+                                  MyRouter(context: context, ref: ref)
                                       .navigateToRoute(
                                           RouterInfo.dashboardRoute);
                                   Navigator.of(context).pop();
                                 }),
                           ),
-                          
-                            PopupMenuItem(
-                              child: BarItem(
-                                  padding: const EdgeInsets.only(
-                                      right: 40, top: 10, bottom: 10, left: 10),
-                                  icon: Icons.local_hospital,
-                                  title: 'Products',
-                                  onTap: () {
-                                    MyRouter(contex: context, ref: ref)
-                                        .navigateToRoute(
-                                            RouterInfo.productRoute);
-                                    Navigator.of(context).pop();
-                                  }),
-                            ),
-                         
-                            PopupMenuItem(
-                              child: BarItem(
-                                  padding: const EdgeInsets.only(
-                                      right: 40, top: 10, bottom: 10, left: 10),
-                                  icon: Icons.person,
-                                  title: 'Orders',
-                                  onTap: () {
-                                    MyRouter(contex: context, ref: ref)
-                                        .navigateToRoute(
-                                            RouterInfo.ordersRoute);
-                                    Navigator.of(context).pop();
-                                  }),
-                            ),
-                         
-                          
-                            PopupMenuItem(
-                              child: BarItem(
-                                  padding: const EdgeInsets.only(
-                                      right: 40, top: 10, bottom: 10, left: 10),
-                                  icon: Icons.person,
-                                  title: 'Profile',
-                                  onTap: () {
-                                    MyRouter(contex: context, ref: ref)
-                                        .navigateToRoute(
-                                            RouterInfo.profileRoute);
-                                    Navigator.of(context).pop();
-                                  }),
-                            ),
+                          PopupMenuItem(
+                            child: BarItem(
+                                padding: const EdgeInsets.only(
+                                    right: 40, top: 10, bottom: 10, left: 10),
+                                icon: Icons.local_hospital,
+                                title: 'Products',
+                                onTap: () {
+                                  MyRouter(context: context, ref: ref)
+                                      .navigateToRoute(RouterInfo.productRoute);
+                                  Navigator.of(context).pop();
+                                }),
+                          ),
+                          PopupMenuItem(
+                            child: BarItem(
+                                padding: const EdgeInsets.only(
+                                    right: 40, top: 10, bottom: 10, left: 10),
+                                icon: Icons.person,
+                                title: 'Orders',
+                                onTap: () {
+                                  MyRouter(context: context, ref: ref)
+                                      .navigateToRoute(RouterInfo.ordersRoute);
+                                  Navigator.of(context).pop();
+                                }),
+                          ),
+                          PopupMenuItem(
+                            child: BarItem(
+                                padding: const EdgeInsets.only(
+                                    right: 40, top: 10, bottom: 10, left: 10),
+                                icon: Icons.person,
+                                title: 'Profile',
+                                onTap: () {
+                                  MyRouter(context: context, ref: ref)
+                                      .navigateToRoute(RouterInfo.profileRoute);
+                                  Navigator.of(context).pop();
+                                }),
+                          ),
                         ];
                       },
                       child: const Icon(
@@ -200,6 +191,5 @@ class MainContainer extends ConsumerWidget {
                   ],
                 )),
     );
-  
   }
 }

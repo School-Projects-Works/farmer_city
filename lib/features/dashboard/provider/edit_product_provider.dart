@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
@@ -56,7 +55,7 @@ class EditProductProvider extends StateNotifier<ProductModel> {
   }
 
   void setMeasurement(value) {
-    state = state.copyWith(productMeasurement: () => value.toString());
+    state = state.copyWith(productMeasurement:  value.toString());
   }
 
   void removeImageUrl(image) {
@@ -111,7 +110,7 @@ class EditProductProvider extends StateNotifier<ProductModel> {
       form.currentState!.reset();
       CustomDialog.dismiss();
       CustomDialog.showToast(message: 'Product updated');
-      MyRouter(contex: context, ref: ref)
+      MyRouter(context: context, ref: ref)
           .navigateToRoute(RouterInfo.productRoute);
     } else {
       CustomDialog.dismiss();

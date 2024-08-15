@@ -5,16 +5,18 @@ import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
 import 'package:firmer_city/features/cart/provider/cart_provider.dart';
+import 'package:firmer_city/features/market/data/product_model.dart';
 import 'package:firmer_city/features/market/provider/market_provider.dart';
 import 'package:firmer_city/generated/assets.dart';
 import 'package:firmer_city/utils/colors.dart';
 import 'package:firmer_city/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class FeaturedProducts extends ConsumerStatefulWidget {
-  const FeaturedProducts( {super.key,this.quantity=8});
+  const FeaturedProducts({super.key, this.quantity = 8});
   final int quantity;
 
   @override
@@ -48,9 +50,9 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                     'Featured Products',
                     style: styles.body(
                         color: primaryColor,
-                        mobile: 30,
-                        desktop: 36,
-                        tablet: 34,
+                        mobile: 20,
+                        desktop: 28,
+                        tablet: 22,
                         fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
@@ -137,8 +139,10 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                   childAspectRatio: 0.7,
                 ),
                 itemCount: products.length > 8
-                    ? widget.quantity!=0?products.sublist(0, widget.quantity).length
-                    : products.length:products.length,
+                    ? widget.quantity != 0
+                        ? products.sublist(0, widget.quantity).length
+                        : products.length
+                    : products.length,
                 itemBuilder: (context, index) {
                   var product = products[index];
                   return InkWell(
@@ -216,27 +220,45 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                RichText(
-                                    text: TextSpan(children: [
-                                  TextSpan(
-                                    text: 'by ',
-                                    style: styles.body(
-                                        color: Colors.black54,
-                                        mobile: 12,
-                                        desktop: 12,
-                                        tablet: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  TextSpan(
-                                    text: product.productOwnerName,
-                                    style: styles.body(
-                                        color: Colors.black54,
-                                        mobile: 12,
-                                        desktop: 12,
-                                        tablet: 12,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ])),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: RichText(
+                                          text: TextSpan(children: [
+                                        TextSpan(
+                                          text: 'by ',
+                                          style: styles.body(
+                                              color: Colors.black54,
+                                              mobile: 12,
+                                              desktop: 12,
+                                              tablet: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        TextSpan(
+                                          text: product.productOwnerName,
+                                          style: styles.body(
+                                              color: Colors.black54,
+                                              mobile: 12,
+                                              desktop: 12,
+                                              tablet: 12,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ])),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    TextButton(
+                                        onPressed: () {
+                                          var address = AddressModel.fromMap(product.address);
+                                          if(address.lat!=0&&address.long!=0){
+                                            MapsLauncher.launchCoordinates(
+                                                address.lat, address.long);
+                                          }
+                                        },
+                                        child: const Text('View on Map'))
+                                  ],
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),

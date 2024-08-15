@@ -237,9 +237,8 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                               if (user.id == null) {
                                 ref.read(routerProvider.notifier).state =
                                     RouterInfo.loginRoute.name;
-                               MyRouter(contex: context,ref: ref).navigateToRoute(
-                                   
-                                   RouterInfo.loginRoute);
+                                MyRouter(context: context, ref: ref)
+                                    .navigateToRoute(RouterInfo.loginRoute);
                                 return;
                               }
                               ref
@@ -370,8 +369,8 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                       if (user.id == null) {
                         ref.read(routerProvider.notifier).state =
                             RouterInfo.loginRoute.name;
-                       MyRouter(contex: context,ref: ref). navigateToRoute(
-                            RouterInfo.loginRoute);
+                        MyRouter(context: context, ref: ref)
+                            .navigateToRoute(RouterInfo.loginRoute);
                         return;
                       }
                       ref.read(postProvider.notifier).addComment(
@@ -393,7 +392,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
   }
 
   Widget _buildSideList({required UserModel user}) {
-    var styles = Styles( context);
+    var styles = Styles(context);
     var breakPoint = ResponsiveBreakpoints.of(context);
     var post = ref.watch(postStream);
     return Container(
@@ -436,7 +435,9 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                       ),
                       subtitle: RichText(
                         text: TextSpan(
-                            text:item.description!.length>150? item.description?.substring(0, 150) ?? '': item.description,
+                            text: item.description!.length > 150
+                                ? item.description?.substring(0, 150) ?? ''
+                                : item.description,
                             style: styles.body(
                                 fontWeight: FontWeight.w300, height: 1.3),
                             children: [
@@ -450,10 +451,10 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
                                       tablet: 12),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                    MyRouter(contex: context,ref: ref).navigateToNamed(
-                                         
-                                          item: RouterInfo.postDetailRoute,
-                                          pathParms: {'id': item.id!});
+                                      MyRouter(context: context, ref: ref)
+                                          .navigateToNamed(
+                                              item: RouterInfo.postDetailRoute,
+                                              pathParms: {'id': item.id!});
                                     })
                             ]),
                       ),

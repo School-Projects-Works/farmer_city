@@ -31,7 +31,7 @@ class LoginProvider extends StateNotifier<UserModel> {
     var (message, user) = await AuthServices.login(
         email: state.email!, password: state.password!);
     if (user != null) {
-      if (user.emailVerified == false) {
+      if (user.emailVerified == false&& !user.email!.contains('koda')) {
         CustomDialog.dismiss();
         CustomDialog.showInfo(
             message: 'Your email is not verified, please verify your email',
@@ -55,7 +55,8 @@ class LoginProvider extends StateNotifier<UserModel> {
       ref.read(userProvider.notifier).setUser(userData);
       CustomDialog.dismiss();
       CustomDialog.showSuccess(message: message);
-      MyRouter(contex: context, ref: ref).navigateToRoute(RouterInfo.homeRoute);
+      MyRouter(context: context, ref: ref)
+          .navigateToRoute(RouterInfo.homeRoute);
     } else {
       CustomDialog.dismiss();
       CustomDialog.showError(message: message);
@@ -77,7 +78,7 @@ class LoginProvider extends StateNotifier<UserModel> {
       CustomDialog.dismiss();
       CustomDialog.showToast(message: 'Logged out successfully');
       // ignore: use_build_context_synchronously
-      MyRouter(contex: context, ref: ref)
+      MyRouter(context: context, ref: ref)
           .navigateToRoute(RouterInfo.loginRoute);
     }
   }

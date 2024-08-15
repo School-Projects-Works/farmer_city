@@ -1,6 +1,7 @@
 import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
+import 'package:firmer_city/features/assistant/services/gpt_services.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
 import 'package:firmer_city/features/cart/provider/order_provider.dart';
@@ -19,19 +20,22 @@ final cartProvider = StateNotifierProvider<CartProvider, CartModel>(
     if (!box.isOpen) {
       Hive.openBox('cart');
     }
-
-    var json = box.get('cart');
-    if (json != null) {
-      Map<String, dynamic> map = {
-        'id': json['id'],
-        'totalPrice': json['totalPrice'],
-        'items': json['items'],
-        'createdAt': json['createdAt']
-      };
-      cart = CartModel.fromMap(map);
-      //.//print('cart: $cart');
+    try {
+      var json = box.get('cart');
+      if (json != null && json['id'].toString().isNotEmpty) {
+        Map<String, dynamic> map = {
+          'id': json['id'],
+          'totalPrice': json['totalPrice'],
+          'items': json['items'],
+          'createdAt': json['createdAt']
+        };
+        cart = CartModel.fromMap(map);
+        //.//print('cart: $cart');
+      }
+      return CartProvider(cart);
+    } catch (e) {
+      return CartProvider(cart);
     }
-    return CartProvider(cart);
   },
 );
 
@@ -147,14 +151,20 @@ class CartProvider extends StateNotifier<CartModel> {
         'method': 'Cash',
       };
     }
-    var address = ref.read(addressProvider);
+    var isPickup = ref.read(isPickUpProvider);
+    var address = isPickup ? 'Customer Pick-up' : ref.read(addressProvider);
     var items =
         ref.read(cartProvider).items.map((e) => CartItem.fromMap(e)).toList();
     var products = items.map((e) => ProductModel.fromMap(e.product)).toList();
     //group items by farmer
     var groupedItems =
         groupBy(products, (ProductModel obj) => obj.productOwnerId);
-        List<String> ids =[user.id!, ...groupedItems.keys].toList();
+    List<Map<String, dynamic>> productsAddress =
+        products.map((product) => product.address).toList();
+    List<AddressModel> add =
+        productsAddress.map((map) => AddressModel.fromMap(map)).toList();
+    var addGroup = groupBy(add, (AddressModel ad) => ad.phone);
+    List<String> ids = [user.id!, ...groupedItems.keys].toList();
     var order = OrderModel(
         id: OrderServices.generateOrderId(),
         totalPrice: state.totalPrice,
@@ -172,6 +182,16 @@ class CartProvider extends StateNotifier<CartModel> {
         createdAt: DateTime.now().millisecondsSinceEpoch);
     var res = await OrderServices.createOrder(order);
     if (res) {
+      for (var phone in addGroup.keys) {
+        if (phone.isNotEmpty) {
+          await sendMessage(phone, 'You have a new oder, check it out');
+        }
+      }
+      if (user.phone != null && user.phone!.isNotEmpty) {
+        await sendMessage(
+            user.phone!, 'Your Order has been successfully placed');
+      }
+
       CustomDialog.dismiss();
       CustomDialog.showSuccess(
         message: 'Order placed successfully',
@@ -180,7 +200,8 @@ class CartProvider extends StateNotifier<CartModel> {
       //clear payments
       ref.read(momoProvider.notifier).clear();
       ref.read(cardDetailsProvider.notifier).clear();
-      MyRouter(contex: context, ref: ref).navigateToRoute(RouterInfo.homeRoute);
+      MyRouter(context: context, ref: ref)
+          .navigateToRoute(RouterInfo.homeRoute);
     } else {
       CustomDialog.dismiss();
       CustomDialog.showError(

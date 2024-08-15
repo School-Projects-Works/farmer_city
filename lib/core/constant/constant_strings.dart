@@ -353,3 +353,22 @@ List<Map<String, dynamic>> products = [
   //   ]
   // }
 ];
+
+List<String> regionsList = [
+  'Greater Accra Region',
+  'Ashanti Region',
+  'Western Region',
+  'Central Region',
+  'Eastern Region',
+  'Volta Region',
+  'Northern Region',
+  'Upper East Region',
+  'Upper West Region',
+  'Bono Region',
+  'Bono East Region',
+  'Ahafo Region',
+  'Western North Region',
+  'Oti Region',
+  'North East Region',
+  'Savannah Region'
+];

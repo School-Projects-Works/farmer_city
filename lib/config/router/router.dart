@@ -26,10 +26,10 @@ import '../../features/community/views/post_details_page.dart';
 
 class MyRouter {
   final WidgetRef ref;
-  final BuildContext contex;
+  final BuildContext context;
   MyRouter({
     required this.ref,
-    required this.contex,
+    required this.context,
   });
   router() => GoRouter(
           initialLocation: RouterInfo.homeRoute.path,
@@ -172,8 +172,11 @@ class MyRouter {
                             builder: (context, state) {
                               return const NewProducts();
                             }),
-                            //edit product
-                            GoRoute(path: RouterInfo.editProductRoute.path, name: RouterInfo.editProductRoute.name, builder: (context, state) {
+                        //edit product
+                        GoRoute(
+                            path: RouterInfo.editProductRoute.path,
+                            name: RouterInfo.editProductRoute.name,
+                            builder: (context, state) {
                               final productId = state.pathParameters['id'];
                               return EditProduct(
                                 id: productId!,
@@ -185,7 +188,7 @@ class MyRouter {
 
   void navigateToRoute(RouterInfo item) {
     ref.read(routerProvider.notifier).state = item.name;
-    contex.go(item.path);
+    context.go(item.path);
   }
 
   void navigateToNamed(
@@ -193,7 +196,7 @@ class MyRouter {
       required RouterInfo item,
       Map<String, dynamic>? extra}) {
     ref.read(routerProvider.notifier).state = item.name;
-    contex.goNamed(item.name, pathParameters: pathParms, extra: extra);
+    context.goNamed(item.name, pathParameters: pathParms, extra: extra);
   }
 }
 

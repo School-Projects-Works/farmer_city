@@ -6,7 +6,6 @@ import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../config/router/router_info.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/styles.dart';
@@ -56,7 +55,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                 CustomButton(
                   text: 'Add Product',
                   onPressed: () {
-                    MyRouter(contex: context, ref: ref)
+                    MyRouter(context: context, ref: ref)
                         .navigateToRoute(RouterInfo.newProductRoute);
                   },
                   radius: 10,
@@ -199,20 +198,20 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                                       itemBuilder: (context) {
                                         return [
                                           //delete, edit and view
-                                          PopupMenuItem(
-                                            child: ListTile(
-                                              leading: const Icon(
-                                                  Icons.remove_red_eye),
-                                              title: const Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 20),
-                                                child: Text('View'),
-                                              ),
-                                              onTap: () {
-                                                //view product
-                                              },
-                                            ),
-                                          ),
+                                          // PopupMenuItem(
+                                          //   child: ListTile(
+                                          //     leading: const Icon(
+                                          //         Icons.remove_red_eye),
+                                          //     title: const Padding(
+                                          //       padding:
+                                          //           EdgeInsets.only(right: 20),
+                                          //       child: Text('View'),
+                                          //     ),
+                                          //     onTap: () {
+                                          //       //view product
+                                          //     },
+                                          //   ),
+                                          // ),
                                           PopupMenuItem(
                                             child: ListTile(
                                               leading: const Icon(Icons.edit),
@@ -223,7 +222,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                                               ),
                                               onTap: () {
                                                 MyRouter(
-                                                        contex: context,
+                                                        context: context,
                                                         ref: ref)
                                                     .navigateToNamed(
                                                   item: RouterInfo
