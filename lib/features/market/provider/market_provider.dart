@@ -14,18 +14,22 @@ final productStreamProvider =
 class FilteredProducts {
   final List<ProductModel> products;
   final List<ProductModel> filteredProducts;
+  List<String> categories ;
   FilteredProducts({
     required this.products,
     required this.filteredProducts,
+    required this.categories
   });
 
   FilteredProducts copyWith({
     List<ProductModel>? products,
     List<ProductModel>? filteredProducts,
+    List<String>? categories
   }) {
     return FilteredProducts(
       products: products ?? this.products,
       filteredProducts: filteredProducts ?? this.filteredProducts,
+      categories: categories ?? this.categories
     );
   }
 }
@@ -37,9 +41,12 @@ final productProvider =
 
 class ProductProvider extends StateNotifier<FilteredProducts> {
   ProductProvider()
-      : super(FilteredProducts(products: [], filteredProducts: []));
+      : super(FilteredProducts(products: [], filteredProducts: [], categories: []));
   void setProducts(List<ProductModel> products) {
-    state = state.copyWith(products: products, filteredProducts: products);
+    var categories = products.map((e) => e.productCategory).toSet().toList();
+    //get unique categories
+    
+    state = state.copyWith(products: products, filteredProducts: products, categories: categories);
   }
 
   void filterProducts(String query) {
@@ -55,6 +62,17 @@ class ProductProvider extends StateNotifier<FilteredProducts> {
               element.productDescription
                   .toLowerCase()
                   .contains(query.toLowerCase()))
+          .toList();
+      state = state.copyWith(filteredProducts: filtered);
+    }
+  }
+
+  void filterByCategory(value) {
+    if (value == 'All') {
+      state = state.copyWith(filteredProducts: state.products);
+    } else {
+      var filtered = state.products
+          .where((element) => element.productCategory == value)
           .toList();
       state = state.copyWith(filteredProducts: filtered);
     }

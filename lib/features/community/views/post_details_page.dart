@@ -25,6 +25,7 @@ class PostDetailPage extends ConsumerStatefulWidget {
 }
 
 class _PostDetailPageState extends ConsumerState<PostDetailPage> {
+
   @override
   Widget build(BuildContext context) {
     var post = ref.watch(getPostProvider(widget.postId));
@@ -68,7 +69,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
     );
   }
 
-  final CarouselController pageController = CarouselController();
+  final CarouselSliderController pageController = CarouselSliderController();
   final TextEditingController _commentController = TextEditingController();
   Widget _buildPostDetail({required PostModel post, required UserModel user}) {
     var styles = Styles(context);

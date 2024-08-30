@@ -14,7 +14,6 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //remove hashbang from url
   setPathUrlStrategy();
 
   await Firebase.initializeApp(

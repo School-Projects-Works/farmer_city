@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firmer_city/core/widget/custom_button.dart';
 import 'package:firmer_city/core/widget/custom_dialog.dart';
+import 'package:firmer_city/core/widget/custom_drop_down.dart';
 import 'package:firmer_city/core/widget/custom_input.dart';
 import 'package:firmer_city/features/auth/provider/login_provider.dart';
 import 'package:firmer_city/features/cart/data/cart_model.dart';
@@ -67,7 +68,7 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                     )
                   else
                     SizedBox(
-                      width: breakPoint.screenWidth * 0.4,
+                      width: breakPoint.screenWidth * 0.3,
                       child: CustomTextFields(
                         hintText: 'Search',
                         suffixIcon: const Icon(Icons.search),
@@ -81,6 +82,27 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                   const SizedBox(
                     width: 10,
                   ),
+                  if (!breakPoint.smallerThan(DESKTOP))
+                    //filter
+                    SizedBox(
+                      width: breakPoint.screenWidth * 0.2,
+                      child: CustomDropDown(
+                          value: ref.watch(selectedCategory),
+                          items: [
+                            "All",
+                            ...ref.watch(productProvider).categories
+                          ]
+                              .map((e) =>
+                                  DropdownMenuItem(value: e, child: Text(e)))
+                              .toList(),
+                          onChanged: (value) {
+                            ref.read(selectedCategory.notifier).state =
+                                value.toString();
+                            ref
+                                .read(productProvider.notifier)
+                                .filterByCategory(value);
+                          }),
+                    ),
                 ],
               ),
             if (ref.watch(isSearchingProvider) &&
@@ -250,8 +272,10 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
                                     ),
                                     TextButton(
                                         onPressed: () {
-                                          var address = AddressModel.fromMap(product.address);
-                                          if(address.lat!=0&&address.long!=0){
+                                          var address = AddressModel.fromMap(
+                                              product.address);
+                                          if (address.lat != 0 &&
+                                              address.long != 0) {
                                             MapsLauncher.launchCoordinates(
                                                 address.lat, address.long);
                                           }
@@ -412,3 +436,5 @@ class _FeaturedProductsState extends ConsumerState<FeaturedProducts> {
         ));
   }
 }
+
+final selectedCategory = StateProvider<String>((ref) => 'All');

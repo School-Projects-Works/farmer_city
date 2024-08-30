@@ -270,7 +270,7 @@ class AddressModel {
         long.hashCode ^
         phone.hashCode;
   }
-    static List<ProductModel> dummyProduct(UserModel user) {
+    static List<ProductModel> dummyProduct() {
     try {
       final _faker = Faker();
 
@@ -283,7 +283,7 @@ class AddressModel {
           address: _faker.address.streetAddress(),
           lat: _faker.geo.latitude(),
           long: _faker.geo.longitude(),
-          phone: user.phone!,
+          phone: _faker.phoneNumber.us(),
         );
         var product = ProductModel(
           id: _faker.guid.guid(),
@@ -318,10 +318,10 @@ class AddressModel {
           productPrice: _faker.randomGenerator.decimal(min: 10).toString(),
           productImages: item['images'],
           productCategory: item['parentCategory'],
-          productOwnerId: user.id!,
-          productOwnerName: user.name!,
+          productOwnerId: _faker.guid.guid(),
+          productOwnerName: _faker.person.name(),
           productOwnerImage:
-              user.profileImage ?? _faker.image.image(keywords: ['profile']),
+              _faker.image.image(keywords: ['profile']),
           productStock: _faker.randomGenerator.integer(30),
           address: address.toMap(),
           canBeDelivered: _faker.randomGenerator.boolean(),
