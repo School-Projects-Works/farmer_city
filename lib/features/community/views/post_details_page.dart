@@ -1,3 +1,4 @@
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firmer_city/config/router/router.dart';
 import 'package:firmer_city/config/router/router_info.dart';
@@ -68,7 +69,7 @@ class _PostDetailPageState extends ConsumerState<PostDetailPage> {
     );
   }
 
-  final CarouselController pageController = CarouselController();
+  final CarouselSliderController pageController = CarouselSliderController();
   final TextEditingController _commentController = TextEditingController();
   Widget _buildPostDetail({required PostModel post, required UserModel user}) {
     var styles = Styles(context);
