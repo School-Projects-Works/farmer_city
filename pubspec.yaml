@@ -13,42 +13,42 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  go_router: ^14.2.7
-  riverpod: ^2.5.1
-  flutter_riverpod: ^2.5.1
-  flutter_native_splash: ^2.4.0
-  flutter_smart_dialog: ^4.9.8
-  responsive_framework: ^1.4.0
-  firebase_core: ^3.4.0
-  firebase_auth: ^5.2.0
-  cloud_firestore: ^5.3.0
+  go_router: ^16.0.0
+  riverpod: ^2.6.1
+  flutter_riverpod: ^2.6.1
+  flutter_native_splash: ^2.4.6
+  flutter_smart_dialog: ^4.9.8+8
+  responsive_framework: ^1.5.1
+  firebase_core: ^3.15.1
+  firebase_auth: ^5.6.2
+  cloud_firestore: ^5.6.11
   url_strategy: ^0.3.0
-  path_provider: ^2.1.4
+  path_provider: ^2.1.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  faker: ^2.1.0
-  intl: ^0.19.0
+  faker: ^2.2.0
+  intl: ^0.20.2
   image_picker: ^1.1.2
-  image_picker_for_web: ^3.0.5
-  firebase_storage: ^12.2.0
-  carousel_slider: ^5.0.0
+  image_picker_for_web: ^3.0.6
+  firebase_storage: ^12.4.9
+  carousel_slider: ^5.1.1
   material_design_icons_flutter: ^7.0.7296
-  http: ^1.2.2
-  flutter_markdown: ^0.7.3
-  cached_network_image: ^3.3.1
+  http: ^1.4.0
+  flutter_markdown: ^0.7.7+1
+  cached_network_image: ^3.4.1
   badges: ^3.1.2
   universal_html: ^2.2.4
-  data_table_2: ^2.5.15
-  collection: ^1.18.0
-  maps_launcher: ^2.2.1
-  location: ^7.0.0
+  data_table_2: ^2.6.0
+  collection: ^1.19.1
+  maps_launcher: ^3.0.0+1
+  location: ^8.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
